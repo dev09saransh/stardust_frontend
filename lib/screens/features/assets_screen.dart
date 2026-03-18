@@ -71,7 +71,7 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
-                                          广泛: CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(asset['name']!,
                                             style: const TextStyle(

@@ -24,7 +24,7 @@ class SettingsScreen extends StatelessWidget {
                     const SizedBox(height: 24),
                     _sectionHeader('Security'),
                     _settingsTile(Icons.fingerprint_rounded, 'Biometric Lock', 'Enabled', toggle: true),
-                    _settingsTile(Icons.two_factor_authentication_rounded, 'Two-Factor Auth', 'Enabled'),
+                    _settingsTile(Icons.verified_user_rounded, 'Two-Factor Auth', 'Enabled'),
                     _settingsTile(Icons.key_rounded, 'Change Password', ''),
                     const SizedBox(height: 24),
                     _sectionHeader('Preferences'),
