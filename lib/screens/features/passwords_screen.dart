@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/stardust_background.dart';
 import '../../widgets/glass_card.dart';
 import '../../widgets/gradient_button.dart';
+import '../../widgets/success_animation.dart';
 import '../../theme.dart';
 
 class PasswordsScreen extends StatefulWidget {
@@ -23,10 +24,11 @@ class _PasswordsScreenState extends State<PasswordsScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => _AddPasswordSheet(onAdd: (site, username, pass) {
+      builder: (sheetContext) => _AddPasswordSheet(onAdd: (site, username, pass) {
         setState(() {
           _passwords.add({'site': site, 'username': username, 'pass': pass});
         });
+        SuccessAnimationOverlay.show(context);
       }),
     );
   }

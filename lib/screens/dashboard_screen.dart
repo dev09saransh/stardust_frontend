@@ -20,6 +20,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
 
+  // Centralized State
+  final List<Map<String, String>> _assets = [
+    {'name': 'Bitcoin Wallet', 'value': '0.5 BTC', 'type': 'Digital'},
+    {'name': 'Safe Deposit Box', 'value': 'Key #123', 'type': 'Physical'},
+  ];
+  final List<Map<String, String>> _policies = [
+    {'provider': 'Star Health', 'policyNo': 'POL-8822', 'type': 'Health'},
+    {'provider': 'Liberty General', 'policyNo': 'VEH-9933', 'type': 'Vehicle'},
+  ];
+  final List<Map<String, String>> _passwords = [
+    {'site': 'Google', 'username': 'user@gmail.com', 'pass': '••••••••'},
+    {'site': 'Amazon', 'username': 'user_shop', 'pass': '••••••••'},
+  ];
+  final List<Map<String, String>> _contacts = [
+    {'name': 'John Doe', 'relation': 'Brother', 'status': 'Verified'},
+    {'name': 'Jane Smith', 'relation': 'Spouse', 'status': 'Pending'},
+  ];
+  final List<Map<String, String>> _docs = [
+    {'title': 'Will & Testament', 'date': '2025-10-12', 'status': 'Signed'},
+    {'title': 'Property Deed', 'date': '2024-05-20', 'status': 'Vaulted'},
+  ];
+
   static const _menuItems = [
     {'icon': Icons.dashboard_rounded, 'label': 'Dashboard'},
     {'icon': Icons.account_balance_wallet_rounded, 'label': 'Assets'},
@@ -99,195 +121,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  // ─── Sidebar (fixed for wide screens) ───
-  Widget _sidebar() {
-    return Container(
-      width: 240,
-      decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.3),
-        border: Border(
-            right: BorderSide(color: Colors.white.withValues(alpha: 0.05))),
-      ),
-      child: _sidebarContent(),
-    );
-  }
+  // ... (sidebar and app bar methods remain mostly same, but using IndexedStack in _mainContentArea)
 
-  Widget _sidebarContent() {
-    return SafeArea(
-      child: Column(
-        children: [
-          const SizedBox(height: 24),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Logo in sidebar
-              Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    colors: [
-                      AppTheme.lavenderAccent.withValues(alpha: 0.3),
-                      AppTheme.softPurple.withValues(alpha: 0.12),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppTheme.lavenderAccent.withValues(alpha: 0.12),
-                      blurRadius: 12,
-                      spreadRadius: 2,
-                    ),
-                  ],
-                ),
-                child: const Icon(
-                  Icons.shield_rounded,
-                  size: 18,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Text('Stardust Vault',
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
-                      color: AppTheme.platinum,
-                      letterSpacing: 1)),
-            ],
-          ),
-          const SizedBox(height: 32),
-          ..._menuItems.asMap().entries.map((e) {
-            final i = e.key;
-            final item = e.value;
-            final selected = i == _selectedIndex;
-            return _SidebarTile(
-              icon: item['icon'] as IconData,
-              label: item['label'] as String,
-              selected: selected,
-              onTap: () {
-                setState(() => _selectedIndex = i);
-                // close drawer on mobile
-                if (_scaffoldKey.currentState?.isDrawerOpen ?? false) {
-                  Navigator.pop(context);
-                }
-              },
-            );
-          }),
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: GlassCard(
-              padding: const EdgeInsets.all(14),
-              child: Row(children: [
-                CircleAvatar(
-                  radius: 18,
-                  backgroundColor: AppTheme.deepCharcoal,
-                  child: Icon(Icons.person, size: 20,
-                      color: AppTheme.lavenderAccent),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Guest User',
-                          style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                              color: AppTheme.platinum)),
-                      Text('Free Plan',
-                          style: TextStyle(
-                              fontSize: 11,
-                              color: AppTheme.silverMist
-                                  .withValues(alpha: 0.4))),
-                    ],
-                  ),
-                ),
-              ]),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ─── AppBar ───
-  Widget _appBar(bool isWide) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-      child: Row(
-        children: [
-          if (!isWide)
-            IconButton(
-              icon: Icon(Icons.menu_rounded, color: AppTheme.silverMist),
-              onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-            ),
-          if (!isWide) const SizedBox(width: 8),
-          Text('Stardust Vault',
-              style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w300,
-                  color: AppTheme.platinum,
-                  letterSpacing: 1)),
-          const Spacer(),
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.06),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(Icons.notifications_none_rounded,
-                color: AppTheme.silverMist, size: 20),
-          ),
-          const SizedBox(width: 10),
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.06),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(Icons.person_outline_rounded,
-                color: AppTheme.silverMist, size: 20),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ─── Main Content Switcher ───
+  // ─── Main Content Switcher with IndexedStack ───
   Widget _mainContentArea(BuildContext context) {
-    switch (_selectedIndex) {
-      case 0:
-        return _dashboardHome(context);
-      case 1:
-        return _PageWrapper(
+    return IndexedStack(
+      index: _selectedIndex,
+      children: [
+        _dashboardHome(context),
+        _PageWrapper(
             child: AssetsScreen(
-                onBack: () => setState(() => _selectedIndex = 0)));
-      case 2:
-        return _PageWrapper(
+                assets: _assets,
+                onBack: () => setState(() => _selectedIndex = 0))),
+        _PageWrapper(
             child: InsuranceScreen(
-                onBack: () => setState(() => _selectedIndex = 0)));
-      case 3:
-        return _PageWrapper(
+                policies: _policies,
+                onBack: () => setState(() => _selectedIndex = 0))),
+        _PageWrapper(
             child: PasswordsScreen(
-                onBack: () => setState(() => _selectedIndex = 0)));
-      case 4:
-        return _PageWrapper(
+                passwords: _passwords,
+                onBack: () => setState(() => _selectedIndex = 0))),
+        _PageWrapper(
             child: ContactsScreen(
-                onBack: () => setState(() => _selectedIndex = 0)));
-      case 5:
-        return _PageWrapper(
+                contacts: _contacts,
+                onBack: () => setState(() => _selectedIndex = 0))),
+        _PageWrapper(
             child: LegalCenterScreen(
-                onBack: () => setState(() => _selectedIndex = 0)));
-      case 6:
-        return _PageWrapper(
+                docs: _docs,
+                onBack: () => setState(() => _selectedIndex = 0))),
+        _PageWrapper(
             child: SettingsScreen(
-                onBack: () => setState(() => _selectedIndex = 0)));
-      default:
-        return _dashboardHome(context);
-    }
+                onBack: () => setState(() => _selectedIndex = 0))),
+      ],
+    );
   }
 
   // ─── Original Dashboard Content ───

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/stardust_background.dart';
 import '../../widgets/glass_card.dart';
 import '../../widgets/gradient_button.dart';
+import '../../widgets/success_animation.dart';
 import '../../theme.dart';
 
 class AssetsScreen extends StatefulWidget {
@@ -23,10 +24,11 @@ class _AssetsScreenState extends State<AssetsScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => _AddAssetSheet(onAdd: (name, value, type) {
+      builder: (sheetContext) => _AddAssetSheet(onAdd: (name, value, type) {
         setState(() {
           _assets.add({'name': name, 'value': value, 'type': type});
         });
+        SuccessAnimationOverlay.show(context);
       }),
     );
   }

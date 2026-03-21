@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/stardust_background.dart';
 import '../../widgets/glass_card.dart';
 import '../../widgets/gradient_button.dart';
+import '../../widgets/success_animation.dart';
 import '../../theme.dart';
 
 class ContactsScreen extends StatefulWidget {
@@ -23,10 +24,11 @@ class _ContactsScreenState extends State<ContactsScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => _AddContactSheet(onAdd: (name, relation) {
+      builder: (sheetContext) => _AddContactSheet(onAdd: (name, relation) {
         setState(() {
           _contacts.add({'name': name, 'relation': relation, 'status': 'Pending'});
         });
+        SuccessAnimationOverlay.show(context);
       }),
     );
   }
