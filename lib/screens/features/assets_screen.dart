@@ -3,25 +3,54 @@ import '../../widgets/stardust_background.dart';
 import '../../widgets/glass_card.dart';
 import '../../widgets/gradient_button.dart';
 import '../../widgets/success_animation.dart';
+import '../../widgets/add_asset_sheet.dart';
+import '../../widgets/login_prompt.dart';
 import '../../theme.dart';
+import 'package:animate_do/animate_do.dart';
 
 class AssetsScreen extends StatefulWidget {
   final List<Map<String, String>> assets;
   final VoidCallback? onBack;
-  const AssetsScreen({super.key, required this.assets, this.onBack});
+  final bool isGuest;
+  const AssetsScreen({super.key, required this.assets, this.onBack, this.isGuest = false});
 
   @override
   State<AssetsScreen> createState() => _AssetsScreenState();
 }
 
-class _AssetsScreenState extends State<AssetsScreen> {
+class _AssetsScreenState extends State<AssetsScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  final List<String> _categories = [
+    'Real Estate',
+    'Banking',
+    'Cards',
+    'Investments',
+    'Vehicles',
+    'Collectibles'
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: _categories.length, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   void _addAsset() {
+    if (widget.isGuest) {
+      LoginRequiredPrompt.show(context);
+      return;
+    }
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (sheetContext) => _AddAssetSheet(onAdd: (name, value, type) {
+      builder: (sheetContext) => AddAssetSheet(onAdd: (name, value, type) {
         setState(() {
           widget.assets.add({'name': name, 'value': value, 'type': type});
         });
@@ -38,64 +67,12 @@ class _AssetsScreenState extends State<AssetsScreen> {
           child: Column(
             children: [
               _header(context),
+              _categoryTabs(),
               Expanded(
-                child: widget.assets.isEmpty
-                    ? _emptyState()
-                    : ListView.builder(
-                        padding: const EdgeInsets.all(20),
-                        itemCount: widget.assets.length,
-                        itemBuilder: (context, index) {
-                          final asset = widget.assets[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: GlassCard(
-                              padding: const EdgeInsets.all(16),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      color: AppTheme.lavenderAccent
-                                          .withValues(alpha: 0.1),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Icon(
-                                      asset['type'] == 'Digital'
-                                          ? Icons.currency_bitcoin_rounded
-                                          : Icons.inventory_2_rounded,
-                                      color: AppTheme.lavenderAccent,
-                                      size: 24,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(asset['name']!,
-                                            style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500,
-                                                color: AppTheme.platinum)),
-                                        Text(asset['type']!,
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: AppTheme.silverMist
-                                                    .withValues(alpha: 0.5))),
-                                      ],
-                                    ),
-                                  ),
-                                  Text(asset['value']!,
-                                      style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppTheme.lavenderAccent)),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+                child: TabBarView(
+                  controller: _tabController,
+                  children: _categories.map((cat) => _buildAssetList(cat)).toList(),
+                ),
               ),
             ],
           ),
@@ -103,9 +80,96 @@ class _AssetsScreenState extends State<AssetsScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addAsset,
-        backgroundColor: AppTheme.lavenderAccent,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.add_rounded, color: Colors.white),
       ),
+    );
+  }
+
+  Widget _categoryTabs() {
+    return Container(
+      height: 50,
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      child: TabBar(
+        controller: _tabController,
+        isScrollable: true,
+        indicatorColor: Theme.of(context).colorScheme.primary,
+        indicatorWeight: 3,
+        dividerColor: Colors.transparent,
+        labelColor: Theme.of(context).colorScheme.onSurface,
+        unselectedLabelColor: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+        tabs: _categories.map((cat) => Tab(text: cat)).toList(),
+      ),
+    );
+  }
+
+  Widget _buildAssetList(String category) {
+    // For now, filtering is simulated or based on 'type' if it matches
+    final filtered = widget.assets.where((a) {
+      if (category == 'Banking' && a['type'] == 'Digital') return true;
+      if (category == 'Real Estate' && a['type'] == 'Physical') return true;
+      // Default to showing some items if it's the first tab for demo
+      return category == _categories[0]; 
+    }).toList();
+
+    if (filtered.isEmpty) return _emptyState();
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(20),
+      itemCount: filtered.length,
+      itemBuilder: (context, index) {
+        final asset = filtered[index];
+        return FadeInUp(
+          duration: const Duration(milliseconds: 400),
+          delay: Duration(milliseconds: index * 100),
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: GlassCard(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      asset['type'] == 'Digital'
+                          ? Icons.currency_bitcoin_rounded
+                          : Icons.inventory_2_rounded,
+                      color: Theme.of(context).colorScheme.primary,
+                      size: 24,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(asset['name']!,
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Theme.of(context).colorScheme.onSurface)),
+                        Text(asset['type']!,
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.6))),
+                      ],
+                    ),
+                  ),
+                  Text(asset['value']!,
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.primary)),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -115,16 +179,16 @@ class _AssetsScreenState extends State<AssetsScreen> {
       child: Row(
         children: [
           IconButton(
-            icon: const Icon(Icons.arrow_back_ios_rounded,
-                color: AppTheme.silverMist),
+            icon: Icon(Icons.arrow_back_ios_rounded,
+                color: Theme.of(context).colorScheme.onSurfaceVariant),
             onPressed: widget.onBack ?? () => Navigator.pop(context),
           ),
           const SizedBox(width: 8),
-          const Text('Assets',
+          Text('Assets',
               style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w400,
-                  color: AppTheme.platinum)),
+                  color: Theme.of(context).colorScheme.onSurface)),
         ],
       ),
     );
@@ -136,108 +200,13 @@ class _AssetsScreenState extends State<AssetsScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.account_balance_wallet_outlined,
-              size: 80, color: AppTheme.silverMist.withValues(alpha: 0.2)),
+              size: 80, color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.2)),
           const SizedBox(height: 16),
           Text('No assets added yet',
               style: TextStyle(
-                  color: AppTheme.silverMist.withValues(alpha: 0.5),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                   fontSize: 16)),
         ],
-      ),
-    );
-  }
-}
-
-class _AddAssetSheet extends StatefulWidget {
-  final Function(String, String, String) onAdd;
-  const _AddAssetSheet({required this.onAdd});
-
-  @override
-  State<_AddAssetSheet> createState() => _AddAssetSheetState();
-}
-
-class _AddAssetSheetState extends State<_AddAssetSheet> {
-  final _nameController = TextEditingController();
-  final _valueController = TextEditingController();
-  String _type = 'Digital';
-
-  @override
-  Widget build(BuildContext context) {
-    return GlassCard(
-      margin: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-          left: 16,
-          right: 16,
-          top: 100),
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Add New Asset',
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: AppTheme.platinum)),
-          const SizedBox(height: 24),
-          TextField(
-            controller: _nameController,
-            decoration: const InputDecoration(labelText: 'Asset Name'),
-          ),
-          const SizedBox(height: 16),
-          TextField(
-            controller: _valueController,
-            decoration: const InputDecoration(labelText: 'Value / Identifier'),
-          ),
-          const SizedBox(height: 16),
-          const Text('Category',
-              style: TextStyle(color: AppTheme.silverMist, fontSize: 14)),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              _typeChip('Digital'),
-              const SizedBox(width: 12),
-              _typeChip('Physical'),
-            ],
-          ),
-          const SizedBox(height: 32),
-          GradientButton(
-            text: 'Add Asset',
-            onPressed: () {
-              if (_nameController.text.isNotEmpty) {
-                widget.onAdd(_nameController.text, _valueController.text, _type);
-                Navigator.pop(context);
-              }
-            },
-          ),
-          const SizedBox(height: 16),
-        ],
-      ),
-    );
-  }
-
-  Widget _typeChip(String label) {
-    final selected = _type == label;
-    return GestureDetector(
-      onTap: () => setState(() => _type = label),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: selected
-              ? AppTheme.lavenderAccent.withValues(alpha: 0.2)
-              : Colors.white.withValues(alpha: 0.05),
-          border: Border.all(
-            color: selected
-                ? AppTheme.lavenderAccent
-                : Colors.white.withValues(alpha: 0.1),
-          ),
-        ),
-        child: Text(label,
-            style: TextStyle(
-                color: selected ? AppTheme.platinum : AppTheme.silverMist,
-                fontWeight: selected ? FontWeight.w500 : FontWeight.w400)),
       ),
     );
   }

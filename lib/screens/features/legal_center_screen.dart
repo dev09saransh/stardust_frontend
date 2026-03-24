@@ -3,12 +3,16 @@ import '../../widgets/stardust_background.dart';
 import '../../widgets/glass_card.dart';
 import '../../widgets/gradient_button.dart';
 import '../../widgets/success_animation.dart';
+import '../../widgets/add_doc_sheet.dart';
+import '../../widgets/login_prompt.dart';
 import '../../theme.dart';
+import 'package:animate_do/animate_do.dart';
 
 class LegalCenterScreen extends StatefulWidget {
   final List<Map<String, String>> docs;
   final VoidCallback? onBack;
-  const LegalCenterScreen({super.key, required this.docs, this.onBack});
+  final bool isGuest;
+  const LegalCenterScreen({super.key, required this.docs, this.onBack, this.isGuest = false});
 
   @override
   State<LegalCenterScreen> createState() => _LegalCenterScreenState();
@@ -17,11 +21,15 @@ class LegalCenterScreen extends StatefulWidget {
 class _LegalCenterScreenState extends State<LegalCenterScreen> {
 
   void _addDoc() {
+    if (widget.isGuest) {
+      LoginRequiredPrompt.show(context);
+      return;
+    }
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (sheetContext) => _AddDocSheet(onAdd: (title) {
+      builder: (sheetContext) => AddDocSheet(onAdd: (title) {
         setState(() {
           widget.docs.add({'title': title, 'date': 'Today', 'status': 'Pending'});
         });
@@ -46,46 +54,50 @@ class _LegalCenterScreenState extends State<LegalCenterScreen> {
                         itemCount: widget.docs.length,
                         itemBuilder: (context, index) {
                           final d = widget.docs[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: GlassCard(
-                              padding: const EdgeInsets.all(16),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      color: AppTheme.lavenderAccent
-                                          .withValues(alpha: 0.1),
-                                      shape: BoxShape.circle,
+                          return FadeInUp(
+                            duration: const Duration(milliseconds: 400),
+                            delay: Duration(milliseconds: index * 100),
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: GlassCard(
+                                padding: const EdgeInsets.all(16),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context).colorScheme.primary
+                                            .withValues(alpha: 0.1),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        Icons.gavel_rounded,
+                                        color: Theme.of(context).colorScheme.primary,
+                                        size: 24,
+                                      ),
                                     ),
-                                    child: const Icon(
-                                      Icons.gavel_rounded,
-                                      color: AppTheme.lavenderAccent,
-                                      size: 24,
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(d['title']!,
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Theme.of(context).colorScheme.onSurface)),
+                                          Text('Added on ${d['date']}',
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Theme.of(context).colorScheme.onSurfaceVariant
+                                                      .withValues(alpha: 0.5))),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(d['title']!,
-                                            style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500,
-                                                color: AppTheme.platinum)),
-                                        Text('Added on ${d['date']}',
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: AppTheme.silverMist
-                                                    .withValues(alpha: 0.5))),
-                                      ],
-                                    ),
-                                  ),
-                                  const Icon(Icons.file_download_outlined,
-                                      color: AppTheme.silverMist, size: 20),
-                                ],
+                                    Icon(Icons.file_download_outlined,
+                                        color: Theme.of(context).colorScheme.onSurfaceVariant, size: 20),
+                                  ],
+                                ),
                               ),
                             ),
                           );
@@ -98,7 +110,7 @@ class _LegalCenterScreenState extends State<LegalCenterScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addDoc,
-        backgroundColor: AppTheme.lavenderAccent,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.upload_file_rounded, color: Colors.white),
       ),
     );
@@ -110,16 +122,16 @@ class _LegalCenterScreenState extends State<LegalCenterScreen> {
       child: Row(
         children: [
           IconButton(
-            icon: const Icon(Icons.arrow_back_ios_rounded,
-                color: AppTheme.silverMist),
+            icon: Icon(Icons.arrow_back_ios_rounded,
+                color: Theme.of(context).colorScheme.onSurfaceVariant),
             onPressed: widget.onBack ?? () => Navigator.pop(context),
           ),
           const SizedBox(width: 8),
-          const Text('Legal Center',
+          Text('Legal Center',
               style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w400,
-                  color: AppTheme.platinum)),
+                  color: Theme.of(context).colorScheme.onSurface)),
         ],
       ),
     );
@@ -131,63 +143,12 @@ class _LegalCenterScreenState extends State<LegalCenterScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.gavel_outlined,
-              size: 80, color: AppTheme.silverMist.withValues(alpha: 0.2)),
+              size: 80, color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.2)),
           const SizedBox(height: 16),
           Text('No documents uploaded',
               style: TextStyle(
-                  color: AppTheme.silverMist.withValues(alpha: 0.5),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                   fontSize: 16)),
-        ],
-      ),
-    );
-  }
-}
-
-class _AddDocSheet extends StatefulWidget {
-  final Function(String) onAdd;
-  const _AddDocSheet({required this.onAdd});
-
-  @override
-  State<_AddDocSheet> createState() => _AddDocSheetState();
-}
-
-class _AddDocSheetState extends State<_AddDocSheet> {
-  final _titleController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return GlassCard(
-      margin: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-          left: 16,
-          right: 16,
-          top: 100),
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Upload Document',
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: AppTheme.platinum)),
-          const SizedBox(height: 24),
-          TextField(
-            controller: _titleController,
-            decoration: const InputDecoration(labelText: 'Document Title'),
-          ),
-          const SizedBox(height: 32),
-          GradientButton(
-            text: 'Upload',
-            onPressed: () {
-              if (_titleController.text.isNotEmpty) {
-                widget.onAdd(_titleController.text);
-                Navigator.pop(context);
-              }
-            },
-          ),
-          const SizedBox(height: 16),
         ],
       ),
     );

@@ -3,12 +3,16 @@ import '../../widgets/stardust_background.dart';
 import '../../widgets/glass_card.dart';
 import '../../widgets/gradient_button.dart';
 import '../../widgets/success_animation.dart';
+import '../../widgets/add_password_sheet.dart';
+import '../../widgets/login_prompt.dart';
 import '../../theme.dart';
+import 'package:animate_do/animate_do.dart';
 
 class PasswordsScreen extends StatefulWidget {
   final List<Map<String, String>> passwords;
   final VoidCallback? onBack;
-  const PasswordsScreen({super.key, required this.passwords, this.onBack});
+  final bool isGuest;
+  const PasswordsScreen({super.key, required this.passwords, this.onBack, this.isGuest = false});
 
   @override
   State<PasswordsScreen> createState() => _PasswordsScreenState();
@@ -17,11 +21,15 @@ class PasswordsScreen extends StatefulWidget {
 class _PasswordsScreenState extends State<PasswordsScreen> {
 
   void _addPassword() {
+    if (widget.isGuest) {
+      LoginRequiredPrompt.show(context);
+      return;
+    }
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (sheetContext) => _AddPasswordSheet(onAdd: (site, username, pass) {
+      builder: (sheetContext) => AddPasswordSheet(onAdd: (site, username, pass) {
         setState(() {
           widget.passwords.add({'site': site, 'username': username, 'pass': pass});
         });
@@ -46,46 +54,50 @@ class _PasswordsScreenState extends State<PasswordsScreen> {
                         itemCount: widget.passwords.length,
                         itemBuilder: (context, index) {
                           final p = widget.passwords[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: GlassCard(
-                              padding: const EdgeInsets.all(16),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      color: AppTheme.lavenderAccent
-                                          .withValues(alpha: 0.1),
-                                      shape: BoxShape.circle,
+                          return FadeInUp(
+                            duration: const Duration(milliseconds: 400),
+                            delay: Duration(milliseconds: index * 100),
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: GlassCard(
+                                padding: const EdgeInsets.all(16),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context).colorScheme.primary
+                                            .withValues(alpha: 0.1),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        Icons.lock_person_rounded,
+                                        color: Theme.of(context).colorScheme.primary,
+                                        size: 24,
+                                      ),
                                     ),
-                                    child: const Icon(
-                                      Icons.lock_person_rounded,
-                                      color: AppTheme.lavenderAccent,
-                                      size: 24,
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(p['site']!,
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Theme.of(context).colorScheme.onSurface)),
+                                          Text(p['username']!,
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Theme.of(context).colorScheme.onSurfaceVariant
+                                                      .withValues(alpha: 0.5))),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(p['site']!,
-                                            style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500,
-                                                color: AppTheme.platinum)),
-                                        Text(p['username']!,
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: AppTheme.silverMist
-                                                    .withValues(alpha: 0.5))),
-                                      ],
-                                    ),
-                                  ),
-                                  const Icon(Icons.visibility_off_outlined,
-                                      color: AppTheme.silverMist, size: 20),
-                                ],
+                                    Icon(Icons.visibility_off_outlined,
+                                        color: Theme.of(context).colorScheme.onSurfaceVariant, size: 20),
+                                  ],
+                                ),
                               ),
                             ),
                           );
@@ -98,7 +110,7 @@ class _PasswordsScreenState extends State<PasswordsScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addPassword,
-        backgroundColor: AppTheme.lavenderAccent,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.add_rounded, color: Colors.white),
       ),
     );
@@ -110,16 +122,16 @@ class _PasswordsScreenState extends State<PasswordsScreen> {
       child: Row(
         children: [
           IconButton(
-            icon: const Icon(Icons.arrow_back_ios_rounded,
-                color: AppTheme.silverMist),
+            icon: Icon(Icons.arrow_back_ios_rounded,
+                color: Theme.of(context).colorScheme.onSurfaceVariant),
             onPressed: widget.onBack ?? () => Navigator.pop(context),
           ),
           const SizedBox(width: 8),
-          const Text('Passwords',
+          Text('Passwords',
               style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w400,
-                  color: AppTheme.platinum)),
+                  color: Theme.of(context).colorScheme.onSurface)),
         ],
       ),
     );
@@ -131,76 +143,12 @@ class _PasswordsScreenState extends State<PasswordsScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.lock_outline_rounded,
-              size: 80, color: AppTheme.silverMist.withValues(alpha: 0.2)),
+              size: 80, color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.2)),
           const SizedBox(height: 16),
           Text('No passwords saved',
               style: TextStyle(
-                  color: AppTheme.silverMist.withValues(alpha: 0.5),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                   fontSize: 16)),
-        ],
-      ),
-    );
-  }
-}
-
-class _AddPasswordSheet extends StatefulWidget {
-  final Function(String, String, String) onAdd;
-  const _AddPasswordSheet({required this.onAdd});
-
-  @override
-  State<_AddPasswordSheet> createState() => _AddPasswordSheetState();
-}
-
-class _AddPasswordSheetState extends State<_AddPasswordSheet> {
-  final _siteController = TextEditingController();
-  final _userController = TextEditingController();
-  final _passController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return GlassCard(
-      margin: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-          left: 16,
-          right: 16,
-          top: 100),
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Save Password',
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: AppTheme.platinum)),
-          const SizedBox(height: 24),
-          TextField(
-            controller: _siteController,
-            decoration: const InputDecoration(labelText: 'Website / App'),
-          ),
-          const SizedBox(height: 16),
-          TextField(
-            controller: _userController,
-            decoration: const InputDecoration(labelText: 'Username / Email'),
-          ),
-          const SizedBox(height: 16),
-          TextField(
-            controller: _passController,
-            obscureText: true,
-            decoration: const InputDecoration(labelText: 'Password'),
-          ),
-          const SizedBox(height: 32),
-          GradientButton(
-            text: 'Save Password',
-            onPressed: () {
-              if (_siteController.text.isNotEmpty) {
-                widget.onAdd(_siteController.text, _userController.text, _passController.text);
-                Navigator.pop(context);
-              }
-            },
-          ),
-          const SizedBox(height: 16),
         ],
       ),
     );

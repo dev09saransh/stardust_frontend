@@ -25,11 +25,11 @@ class GlowingText extends StatelessWidget {
             color: Colors.transparent,
             shadows: [
               Shadow(
-                color: AppTheme.lavenderAccent.withValues(alpha: 0.5),
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
                 blurRadius: 20,
               ),
               Shadow(
-                color: AppTheme.softPurple.withValues(alpha: 0.3),
+                color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.3),
                 blurRadius: 40,
               ),
             ],

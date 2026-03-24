@@ -8,13 +8,13 @@ class AppTheme {
   static const Color deepCharcoal = Color(0xFF1A1A2E);     // Card / sidebar bg
   static const Color silverMist = Color(0xFFD0CFFF);       // Light lavender text
   static const Color platinum = Color(0xFFF0EEFF);         // Bright white-lavender
-  static const Color lavenderAccent = Color(0xFF7C4DFF);   // Primary vivid purple
+  static const Color lavenderAccent = Color(0xFF2196F3);   // Updated to blue to match screenshots
   static const Color softPurple = Color(0xFF6C63FF);       // Secondary indigo
   static const Color surfaceGlass = Color(0x14FFFFFF);     // Glass card fill
   static const Color borderSubtle = Color(0x1AFFFFFF);     // Subtle border
 
   static const LinearGradient buttonGradient = LinearGradient(
-    colors: [Color(0xFF7C4DFF), Color(0xFF651FFF)],
+    colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
   );
@@ -36,15 +36,18 @@ class AppTheme {
         secondary: softPurple,
         surface: deepCharcoal,
         onPrimary: Colors.white,
-        onSurface: silverMist,
+        onSurface: platinum,
+        onSurfaceVariant: silverMist,
       ),
       textTheme: GoogleFonts.outfitTextTheme(baseTheme.textTheme).copyWith(
-        bodyLarge: GoogleFonts.inter(textStyle: baseTheme.textTheme.bodyLarge),
-        bodyMedium: GoogleFonts.inter(textStyle: baseTheme.textTheme.bodyMedium),
+        bodyLarge: GoogleFonts.inter(textStyle: baseTheme.textTheme.bodyLarge, color: platinum),
+        bodyMedium: GoogleFonts.inter(textStyle: baseTheme.textTheme.bodyMedium, color: silverMist),
+        titleLarge: GoogleFonts.outfit(textStyle: baseTheme.textTheme.titleLarge, color: platinum),
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        iconTheme: IconThemeData(color: platinum),
       ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: deepCharcoal,
@@ -69,6 +72,68 @@ class AppTheme {
         ),
         hintStyle: GoogleFonts.inter(color: silverMist.withValues(alpha: 0.4)),
         labelStyle: GoogleFonts.inter(color: silverMist.withValues(alpha: 0.7)),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      ),
+    );
+  }
+
+  static ThemeData get lightTheme {
+    final baseTheme = ThemeData.light();
+    const Color lightBluePrimary = Color(0xFF2196F3); // Material Blue
+    const Color deepBlueSecondary = Color(0xFF1976D2);
+    const Color lightBg = Color(0xFFF8F9FE); // Slightly off-white for depth
+    const Color darkText = Color(0xFF1C1C1E);
+    const Color mediumText = Color(0xFF2C2C2E); // Even darker for maximum readability
+    const Color lightText = Color(0xFF636366);
+
+    return ThemeData(
+      brightness: Brightness.light,
+      scaffoldBackgroundColor: lightBg,
+      primaryColor: lightBluePrimary,
+      colorScheme: ColorScheme.light(
+        primary: lightBluePrimary,
+        secondary: deepBlueSecondary,
+        surface: Colors.white,
+        onPrimary: Colors.white,
+        onSurface: darkText,
+        onSurfaceVariant: mediumText, // Improved contrast
+        surfaceTint: Colors.white,
+      ),
+      textTheme: GoogleFonts.outfitTextTheme(baseTheme.textTheme).copyWith(
+        bodyLarge: GoogleFonts.inter(textStyle: baseTheme.textTheme.bodyLarge, color: darkText),
+        bodyMedium: GoogleFonts.inter(textStyle: baseTheme.textTheme.bodyMedium, color: mediumText),
+        titleLarge: GoogleFonts.outfit(textStyle: baseTheme.textTheme.titleLarge, color: darkText),
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: IconThemeData(color: darkText),
+      ),
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: Colors.white,
+        contentTextStyle: GoogleFonts.inter(color: darkText),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 4,
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.black.withValues(alpha: 0.1)),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.black.withValues(alpha: 0.1)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: lightBluePrimary, width: 1.5),
+        ),
+        hintStyle: GoogleFonts.inter(color: Colors.black.withValues(alpha: 0.4)),
+        labelStyle: GoogleFonts.inter(color: Colors.black.withValues(alpha: 0.7)),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),

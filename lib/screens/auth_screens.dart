@@ -5,9 +5,24 @@ import '../widgets/gradient_button.dart';
 import '../widgets/glowing_text.dart';
 import '../theme.dart';
 
-// ─── Auth Selection ───
-class AuthSelectionScreen extends StatelessWidget {
-  const AuthSelectionScreen({super.key});
+// ─── Unified Auth Screen ───
+class AuthScreen extends StatefulWidget {
+  final int initialIndex;
+  const AuthScreen({super.key, this.initialIndex = 0});
+
+  @override
+  State<AuthScreen> createState() => _AuthScreenState();
+}
+
+class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  int _signUpStep = 1; // 1: Identity, 2: Security
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this, initialIndex: widget.initialIndex);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,69 +33,43 @@ class AuthSelectionScreen extends StatelessWidget {
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(24),
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 420),
+                constraints: const BoxConstraints(maxWidth: 440),
                 child: Column(
                   children: [
-                    // Shield icon logo
-                    Container(
-                      width: 56,
-                      height: 56,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          colors: [
-                            AppTheme.lavenderAccent.withValues(alpha: 0.25),
-                            AppTheme.softPurple.withValues(alpha: 0.10),
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppTheme.lavenderAccent
-                                .withValues(alpha: 0.15),
-                            blurRadius: 30,
-                            spreadRadius: 8,
+                    _logo(),
+                    const SizedBox(height: 32),
+                    GlassCard(
+                      padding: const EdgeInsets.all(0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _tabBar(),
+                          Padding(
+                            padding: const EdgeInsets.all(24),
+                            child: SizedBox(
+                              height: 400,
+                              child: TabBarView(
+                                controller: _tabController,
+                                children: [
+                                  _signInTab(),
+                                  _signUpTab(),
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                      child: const Icon(
-                        Icons.shield_rounded,
-                        size: 28,
-                        color: Colors.white,
-                      ),
                     ),
-                    const SizedBox(height: 20),
-                    GlowingText('Welcome',
-                        style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w300,
-                            color: AppTheme.platinum,
-                            letterSpacing: 2)),
-                    const SizedBox(height: 8),
-                    Text('Choose how you want to continue',
-                        style: TextStyle(
-                            color: AppTheme.silverMist.withValues(alpha: 0.5),
-                            fontSize: 14)),
-                    const SizedBox(height: 48),
-                    GradientButton(
-                        text: 'Login',
-                        icon: Icons.login_rounded,
-                        onPressed: () =>
-                            Navigator.pushNamed(context, '/login')),
-                    const SizedBox(height: 16),
-                    _OutlineButton(
-                        text: 'Sign Up',
-                        icon: Icons.person_add_outlined,
-                        onPressed: () =>
-                            Navigator.pushNamed(context, '/signup')),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 24),
                     TextButton(
                       onPressed: () => Navigator.pushReplacementNamed(
-                          context, '/dashboard'),
-                      child: Text('Do it later →',
+                        context, 
+                        '/dashboard', 
+                        arguments: {'isGuest': true, 'isLogin': true}
+                      ),
+                      child: Text('Continue as Guest →',
                           style: TextStyle(
-                              color: AppTheme.silverMist.withValues(alpha: 0.4),
+                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
                               fontSize: 14)),
                     ),
                   ],
@@ -92,140 +81,175 @@ class AuthSelectionScreen extends StatelessWidget {
       ),
     );
   }
-}
 
-// ─── Login ───
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  Widget _logo() {
+    return Container(
+      width: 64,
+      height: 64,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: AppTheme.buttonGradient,
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.lavenderAccent.withValues(alpha: 0.3),
+            blurRadius: 20,
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+      child: const Icon(Icons.shield_rounded, size: 32, color: Colors.white),
+    );
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: StardustBackground(
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 420),
-                child: Column(
-                  children: [
-                    _backButton(context),
-                    const SizedBox(height: 16),
-                    GlowingText('Login',
-                        style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.w300,
-                            color: AppTheme.platinum,
-                            letterSpacing: 1)),
-                    const SizedBox(height: 32),
-                    GlassCard(
-                      child: Column(children: [
-                        TextField(
-                            decoration:
-                                const InputDecoration(labelText: 'Email')),
-                        const SizedBox(height: 16),
-                        TextField(
-                            obscureText: true,
-                            decoration:
-                                const InputDecoration(labelText: 'Password')),
-                        const SizedBox(height: 24),
-                        GradientButton(
-                            text: 'Login',
-                            onPressed: () =>
-                                Navigator.pushNamed(
-                                    context, '/otp-verification')),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            TextButton(
-                                onPressed: () => Navigator.pushNamed(
-                                    context, '/forgot-password'),
-                                child: Text('Forgot Password?',
-                                    style: TextStyle(
-                                        color: AppTheme.lavenderAccent,
-                                        fontSize: 13))),
-                            TextButton(
-                                onPressed: () => Navigator.pushNamed(
-                                    context, '/recover-account'),
-                                child: Text('Recover Account',
-                                    style: TextStyle(
-                                        color: AppTheme.lavenderAccent,
-                                        fontSize: 13))),
-                          ],
-                        ),
-                      ]),
-                    ),
-                  ],
+  Widget _tabBar() {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
+          ),
+        ),
+      ),
+      child: TabBar(
+        controller: _tabController,
+        indicatorColor: AppTheme.lavenderAccent,
+        indicatorSize: TabBarIndicatorSize.tab,
+        labelColor: Theme.of(context).colorScheme.onSurface,
+        unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+        tabs: const [
+          Tab(text: 'Sign In'),
+          Tab(text: 'Create Account'),
+        ],
+      ),
+    );
+  }
+
+  Widget _signInTab() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const TextField(decoration: InputDecoration(labelText: 'Email Address')),
+        const SizedBox(height: 16),
+        const TextField(decoration: InputDecoration(labelText: 'Password'), obscureText: true),
+        const SizedBox(height: 24),
+        GradientButton(
+          text: 'Sign In',
+          onPressed: () => Navigator.pushNamed(
+            context, 
+            '/otp-verification',
+            arguments: {'isLogin': true},
+          ),
+        ),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton(
+              onPressed: () => Navigator.pushNamed(context, '/forgot-password'),
+              child: const Text('Lost Access?', style: TextStyle(color: AppTheme.lavenderAccent, fontSize: 13)),
+            ),
+            const Text(' | ', style: TextStyle(color: Colors.grey, fontSize: 12)),
+            TextButton(
+              onPressed: () => Navigator.pushNamed(context, '/recover-account'),
+              child: const Text('Emergency Recovery', style: TextStyle(color: AppTheme.lavenderAccent, fontSize: 13)),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _signUpTab() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(
+          children: [
+            _stepIndicator(1, 'Identity'),
+            const Expanded(child: Divider(indent: 8, endIndent: 8)),
+            _stepIndicator(2, 'Security'),
+          ],
+        ),
+        const SizedBox(height: 32),
+        if (_signUpStep == 1) ...[
+          const TextField(decoration: InputDecoration(labelText: 'Full Name')),
+          const SizedBox(height: 16),
+          const TextField(decoration: InputDecoration(labelText: 'Email Address')),
+          const SizedBox(height: 24),
+          GradientButton(
+            text: 'Continue',
+            onPressed: () => setState(() => _signUpStep = 2),
+          ),
+        ] else ...[
+          const TextField(decoration: InputDecoration(labelText: 'Password'), obscureText: true),
+          const SizedBox(height: 16),
+          const TextField(decoration: InputDecoration(labelText: 'Confirm Password'), obscureText: true),
+          const SizedBox(height: 24),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => setState(() => _signUpStep = 1),
+                  child: const Text('Back'),
                 ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: GradientButton(
+                  text: 'Create',
+                  onPressed: () => Navigator.pushNamed(
+                    context, 
+                    '/otp-verification',
+                    arguments: {'isLogin': false},
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _stepIndicator(int step, String label) {
+    bool active = _signUpStep >= step;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 24,
+          height: 24,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: active ? AppTheme.lavenderAccent : Colors.transparent,
+            border: Border.all(color: active ? AppTheme.lavenderAccent : Colors.grey.withValues(alpha: 0.5)),
+          ),
+          child: Center(
+            child: Text(
+              step.toString(),
+              style: TextStyle(
+                fontSize: 12,
+                color: active ? Colors.white : Colors.grey,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-// ─── Signup ───
-class SignupScreen extends StatelessWidget {
-  const SignupScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: StardustBackground(
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 420),
-                child: Column(
-                  children: [
-                    _backButton(context),
-                    const SizedBox(height: 16),
-                    Text('Create Account',
-                        style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.w300,
-                            color: AppTheme.platinum,
-                            letterSpacing: 1)),
-                    const SizedBox(height: 32),
-                    GlassCard(
-                      child: Column(children: [
-                        TextField(
-                            decoration:
-                                const InputDecoration(labelText: 'Email')),
-                        const SizedBox(height: 16),
-                        TextField(
-                            obscureText: true,
-                            decoration:
-                                const InputDecoration(labelText: 'Password')),
-                        const SizedBox(height: 16),
-                        TextField(
-                            obscureText: true,
-                            decoration: const InputDecoration(
-                                labelText: 'Confirm Password')),
-                        const SizedBox(height: 24),
-                        GradientButton(
-                            text: 'Create Account',
-                            onPressed: () =>
-                                Navigator.pushNamed(
-                                    context, '/otp-verification')),
-                      ]),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+        const SizedBox(width: 8),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            color: active ? Theme.of(context).colorScheme.onSurface : Colors.grey,
+            fontWeight: active ? FontWeight.bold : FontWeight.normal,
           ),
         ),
-      ),
+      ],
     );
   }
 }
+
+// Forgot Password and Recover Account screens remain as they are linked from AuthScreen
 
 // ─── Forgot Password ───
 class ForgotPasswordScreen extends StatelessWidget {
@@ -349,13 +373,15 @@ class RecoverAccountScreen extends StatelessWidget {
 
 // ─── OTP Verification ───
 class OTPVerificationScreen extends StatefulWidget {
-  const OTPVerificationScreen({super.key});
+  final bool isLogin;
+  const OTPVerificationScreen({super.key, this.isLogin = true});
 
   @override
   State<OTPVerificationScreen> createState() => _OTPVerificationScreenState();
 }
 
 class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
+  // ... existing code ...
   final List<TextEditingController> _controllers =
       List.generate(4, (_) => TextEditingController());
   final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
@@ -443,7 +469,11 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                         GradientButton(
                           text: 'Verify',
                           onPressed: () {
-                            Navigator.pushReplacementNamed(context, '/dashboard');
+                            Navigator.pushReplacementNamed(
+                              context, 
+                              '/dashboard',
+                              arguments: {'isGuest': false, 'isLogin': widget.isLogin},
+                            );
                           },
                         ),
                         const SizedBox(height: 20),

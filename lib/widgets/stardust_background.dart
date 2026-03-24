@@ -37,6 +37,24 @@ class _StardustBackgroundState extends State<StardustBackground> with SingleTick
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    final List<Color> bgGradient = isDark 
+      ? [
+          const Color(0xFF0A0A1A),
+          const Color(0xFF110E2E),
+          const Color(0xFF1A1040),
+          const Color(0xFF110E2E),
+          const Color(0xFF0A0A1A),
+        ]
+      : [
+          const Color(0xFFFFFFFF),
+          const Color(0xFFF8F9FA),
+        ];
+
+    final Color primaryGlow = Theme.of(context).colorScheme.primary;
+    final Color secondaryGlow = Theme.of(context).colorScheme.secondary;
+
     return MouseRegion(
       onHover: (e) => setState(() => _mousePos = e.localPosition),
       child: AnimatedBuilder(
@@ -46,15 +64,9 @@ class _StardustBackgroundState extends State<StardustBackground> with SingleTick
             children: [
               // ─── Base gradient ───
               Container(
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [
-                      Color(0xFF0A0A1A),
-                      Color(0xFF110E2E),
-                      Color(0xFF1A1040),
-                      Color(0xFF110E2E),
-                      Color(0xFF0A0A1A),
-                    ],
+                    colors: bgGradient,
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                   ),
@@ -72,7 +84,7 @@ class _StardustBackgroundState extends State<StardustBackground> with SingleTick
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        const Color(0xFF7C4DFF).withValues(alpha: 0.05),
+                        primaryGlow.withValues(alpha: isDark ? 0.05 : 0.08),
                         Colors.transparent,
                       ],
                     ),
@@ -91,8 +103,8 @@ class _StardustBackgroundState extends State<StardustBackground> with SingleTick
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        const Color(0xFF7C4DFF).withValues(alpha: 0.12 + (0.04 * _animation.value)),
-                        const Color(0xFF7C4DFF).withValues(alpha: 0.04),
+                        primaryGlow.withValues(alpha: isDark ? (0.12 + (0.04 * _animation.value)) : 0.0),
+                        primaryGlow.withValues(alpha: isDark ? 0.04 : 0.0),
                         Colors.transparent,
                       ],
                       stops: const [0.0, 0.5, 1.0],
@@ -112,8 +124,8 @@ class _StardustBackgroundState extends State<StardustBackground> with SingleTick
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        const Color(0xFF6C63FF).withValues(alpha: 0.10 + (0.03 * _animation.value)),
-                        const Color(0xFF6C63FF).withValues(alpha: 0.03),
+                        secondaryGlow.withValues(alpha: isDark ? (0.10 + (0.03 * _animation.value)) : 0.0),
+                        secondaryGlow.withValues(alpha: isDark ? 0.03 : 0.0),
                         Colors.transparent,
                       ],
                       stops: const [0.0, 0.5, 1.0],
@@ -133,8 +145,8 @@ class _StardustBackgroundState extends State<StardustBackground> with SingleTick
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        const Color(0xFF9C27B0).withValues(alpha: 0.08 + (0.02 * _animation.value)),
-                        const Color(0xFF9C27B0).withValues(alpha: 0.02),
+                        const Color(0xFF9C27B0).withValues(alpha: (isDark ? 0.08 : 0.10) + (0.02 * _animation.value)),
+                        const Color(0xFF9C27B0).withValues(alpha: isDark ? 0.02 : 0.04),
                         Colors.transparent,
                       ],
                       stops: const [0.0, 0.5, 1.0],

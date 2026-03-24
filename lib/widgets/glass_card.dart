@@ -30,8 +30,19 @@ class _GlassCardState extends State<GlassCard> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+    
+    final Color bgColor = isDark 
+        ? Colors.white.withValues(alpha: _isHovered ? 0.08 : 0.05)
+        : Colors.white; // Solid white for light mode
+    
+    final Color borderColor = isDark
+        ? Colors.white.withValues(alpha: _isHovered ? 0.2 : 0.1)
+        : Colors.grey.withValues(alpha: _isHovered ? 0.2 : 0.1);
+
     Widget card = AnimatedScale(
-      scale: _isHovered ? 1.02 : 1.0,
+      scale: _isHovered ? 1.01 : 1.0,
       duration: const Duration(milliseconds: 200),
       curve: Curves.easeOutCubic,
       child: AnimatedContainer(
@@ -42,7 +53,9 @@ class _GlassCardState extends State<GlassCard> {
           borderRadius: BorderRadius.circular(widget.borderRadius),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: _isHovered ? 0.4 : 0.25),
+              color: isDark 
+                  ? Colors.black.withValues(alpha: _isHovered ? 0.4 : 0.25)
+                  : colorScheme.onSurface.withValues(alpha: _isHovered ? 0.12 : 0.06),
               blurRadius: _isHovered ? 32 : 24,
               offset: Offset(0, _isHovered ? 12 : 8),
             ),
@@ -55,20 +68,20 @@ class _GlassCardState extends State<GlassCard> {
             child: Container(
               padding: widget.padding ?? const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: _isHovered ? 0.08 : 0.05),
+                color: bgColor,
                 borderRadius: BorderRadius.circular(widget.borderRadius),
                 border: Border.all(
-                  color: Colors.white.withValues(alpha: _isHovered ? 0.2 : 0.1),
+                  color: borderColor,
                   width: 1.0,
                 ),
-                gradient: LinearGradient(
+                gradient: isDark ? LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
                     Colors.white.withValues(alpha: 0.05),
                     Colors.white.withValues(alpha: 0.02),
                   ],
-                ),
+                ) : null,
               ),
               child: widget.child,
             ),
