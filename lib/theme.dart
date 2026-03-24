@@ -12,6 +12,8 @@ class AppTheme {
   static const Color softPurple = Color(0xFF6C63FF);       // Secondary indigo
   static const Color surfaceGlass = Color(0x14FFFFFF);     // Glass card fill
   static const Color borderSubtle = Color(0x1AFFFFFF);     // Subtle border
+  static const Color glassAccentDark = Color(0x1A6C63FF);   // Subtle purple glow for dark
+  static const Color glassAccentLight = Color(0x0D2196F3);  // Soft blue tint for light
 
   static const LinearGradient buttonGradient = LinearGradient(
     colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
@@ -122,18 +124,18 @@ class AppTheme {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.black.withValues(alpha: 0.1)),
+          borderSide: BorderSide(color: Colors.black.withValues(alpha: 0.05)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.black.withValues(alpha: 0.1)),
+          borderSide: BorderSide(color: Colors.black.withValues(alpha: 0.05)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: lightBluePrimary, width: 1.5),
         ),
-        hintStyle: GoogleFonts.inter(color: Colors.black.withValues(alpha: 0.4)),
-        labelStyle: GoogleFonts.inter(color: Colors.black.withValues(alpha: 0.7)),
+        hintStyle: GoogleFonts.inter(color: Colors.black.withValues(alpha: 0.3)),
+        labelStyle: GoogleFonts.inter(color: Colors.black.withValues(alpha: 0.6)),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),

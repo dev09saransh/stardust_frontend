@@ -554,7 +554,53 @@ class _DashboardScreenState extends State<DashboardScreen> {
             delay: const Duration(milliseconds: 200),
             child: _premiumHeroCard(),
           ),
+          const SizedBox(height: 48),
+          _sectionLabel('CORE VAULT FEATURES'),
+          const SizedBox(height: 24),
+          GridView.count(
+            crossAxisCount: isWide ? 4 : (MediaQuery.of(context).size.width > 600 ? 2 : 1),
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisSpacing: 24,
+            mainAxisSpacing: 24,
+            childAspectRatio: 1.4,
+            children: [
+              _featureGridCard('Assets', 'Digital & Physical', Icons.account_balance_wallet_outlined, 0, () => _onMenuItemSelected(1)),
+              _featureGridCard('Insurance', 'Policies & Claims', Icons.security_outlined, 1, () => _onMenuItemSelected(2)),
+              _featureGridCard('Passwords', 'Secure Vault', Icons.password_outlined, 2, () => _onMenuItemSelected(3)),
+              _featureGridCard('Contacts', 'Trusted Nominees', Icons.people_outline, 3, () => _onMenuItemSelected(5)),
+            ],
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _featureGridCard(String title, String subtitle, IconData icon, int index, VoidCallback onTap) {
+    return FadeInUp(
+      duration: const Duration(milliseconds: 600),
+      delay: Duration(milliseconds: 300 + (index * 100)),
+      child: GlassCard(
+        onTap: onTap,
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: Theme.of(context).colorScheme.primary, size: 24),
+            ),
+            const SizedBox(height: 20),
+            Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
+            const SizedBox(height: 4),
+            Text(subtitle, style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5))),
+          ],
+        ),
       ),
     );
   }

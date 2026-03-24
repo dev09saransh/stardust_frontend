@@ -34,19 +34,19 @@ class _GlassCardState extends State<GlassCard> {
     final colorScheme = Theme.of(context).colorScheme;
     
     final Color bgColor = isDark 
-        ? Colors.white.withValues(alpha: _isHovered ? 0.08 : 0.05)
-        : Colors.white; // Solid white for light mode
+        ? Colors.white.withValues(alpha: _isHovered ? 0.07 : 0.04)
+        : Colors.white.withValues(alpha: _isHovered ? 0.95 : 0.9);
     
     final Color borderColor = isDark
-        ? Colors.white.withValues(alpha: _isHovered ? 0.2 : 0.1)
-        : Colors.grey.withValues(alpha: _isHovered ? 0.2 : 0.1);
+        ? colorScheme.primary.withValues(alpha: _isHovered ? 0.4 : 0.15)
+        : colorScheme.primary.withValues(alpha: _isHovered ? 0.3 : 0.1);
 
     Widget card = AnimatedScale(
-      scale: _isHovered ? 1.01 : 1.0,
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeOutCubic,
+      scale: _isHovered ? 1.02 : 1.0,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeOutBack,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 400),
         width: widget.width,
         height: widget.height,
         decoration: BoxDecoration(
@@ -54,34 +54,47 @@ class _GlassCardState extends State<GlassCard> {
           boxShadow: [
             BoxShadow(
               color: isDark 
-                  ? Colors.black.withValues(alpha: _isHovered ? 0.4 : 0.25)
-                  : colorScheme.onSurface.withValues(alpha: _isHovered ? 0.12 : 0.06),
-              blurRadius: _isHovered ? 32 : 24,
-              offset: Offset(0, _isHovered ? 12 : 8),
+                  ? colorScheme.primary.withValues(alpha: _isHovered ? 0.15 : 0.05)
+                  : colorScheme.primary.withValues(alpha: _isHovered ? 0.1 : 0.05),
+              blurRadius: _isHovered ? 40 : 20,
+              spreadRadius: _isHovered ? 2 : 0,
+              offset: Offset(0, _isHovered ? 12 : 6),
             ),
+            if (isDark && _isHovered)
+              BoxShadow(
+                color: colorScheme.primary.withValues(alpha: 0.1),
+                blurRadius: 10,
+                spreadRadius: -2,
+              ),
           ],
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(widget.borderRadius),
           child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-            child: Container(
+            filter: ImageFilter.blur(sigmaX: isDark ? 20 : 30, sigmaY: isDark ? 20 : 30),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 400),
               padding: widget.padding ?? const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: bgColor,
                 borderRadius: BorderRadius.circular(widget.borderRadius),
                 border: Border.all(
                   color: borderColor,
-                  width: 1.0,
+                  width: _isHovered ? 1.5 : 1.0,
                 ),
-                gradient: isDark ? LinearGradient(
+                gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [
-                    Colors.white.withValues(alpha: 0.05),
-                    Colors.white.withValues(alpha: 0.02),
-                  ],
-                ) : null,
+                  colors: isDark 
+                    ? [
+                        Colors.white.withValues(alpha: 0.05),
+                        Colors.white.withValues(alpha: 0.01),
+                      ]
+                    : [
+                        Colors.white.withValues(alpha: 0.4),
+                        Colors.white.withValues(alpha: 0.1),
+                      ],
+                ),
               ),
               child: widget.child,
             ),
