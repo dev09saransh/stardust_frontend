@@ -243,58 +243,91 @@ class _DashboardScreenState extends State<DashboardScreen> {
       {'label': 'Settings', 'icon': Icons.settings_outlined, 'color': Colors.grey},
     ];
 
-    return FadeIn(
-      duration: const Duration(milliseconds: 300),
-      child: Container(
-        color: Colors.black.withValues(alpha: 0.8),
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FadeInDown(
-              child: const Text('Asset Catalog', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white)),
-            ),
-            const SizedBox(height: 40),
-            Container(
-              constraints: const BoxConstraints(maxWidth: 800),
-              padding: const EdgeInsets.all(20),
-              child: Wrap(
-                spacing: 20,
-                runSpacing: 20,
-                alignment: WrapAlignment.center,
-                children: List.generate(categories.length, (index) {
-                  final cat = categories[index];
-                  return FadeInUp(
-                    delay: Duration(milliseconds: 100 * index),
-                    child: InkWell(
-                      onTap: () => setState(() => _showCatalog = false),
-                      child: GlassCard(
-                        width: 160,
-                        padding: const EdgeInsets.symmetric(vertical: 24),
-                        child: Column(
-                          children: [
-                            Icon(cat['icon'] as IconData, color: cat['color'] as Color, size: 32),
-                            const SizedBox(height: 12),
-                            Text(cat['label'] as String, style: const TextStyle(fontWeight: FontWeight.bold)),
-                          ],
+    return Positioned.fill(
+      child: FadeIn(
+        duration: const Duration(milliseconds: 300),
+        child: GestureDetector(
+          onTap: () => setState(() => _showCatalog = false),
+          child: Container(
+            color: Colors.black.withValues(alpha: 0.85),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Center(
+                child: GestureDetector(
+                  onTap: () {}, // Prevent closing when clicking inside
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 40),
+                        FadeInDown(
+                          child: const Text('Asset Catalog', 
+                            style: TextStyle(fontSize: 42, fontWeight: FontWeight.w900, color: Colors.white, letterSpacing: -1)),
                         ),
-                      ),
+                        const SizedBox(height: 12),
+                        FadeInDown(
+                          delay: const Duration(milliseconds: 100),
+                          child: Text('Explore your vault categories', 
+                            style: TextStyle(fontSize: 16, color: Colors.white.withValues(alpha: 0.6))),
+                        ),
+                        const SizedBox(height: 60),
+                        Container(
+                          constraints: const BoxConstraints(maxWidth: 900),
+                          padding: const EdgeInsets.symmetric(horizontal: 40),
+                          child: Wrap(
+                            spacing: 24,
+                            runSpacing: 24,
+                            alignment: WrapAlignment.center,
+                            children: List.generate(categories.length, (index) {
+                              final cat = categories[index];
+                              return FadeInUp(
+                                delay: Duration(milliseconds: 150 + (index * 50)),
+                                child: InkWell(
+                                  onTap: () => setState(() => _showCatalog = false),
+                                  borderRadius: BorderRadius.circular(24),
+                                  child: GlassCard(
+                                    width: 180,
+                                    padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(16),
+                                          decoration: BoxDecoration(
+                                            color: (cat['color'] as Color).withValues(alpha: 0.1),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Icon(cat['icon'] as IconData, color: cat['color'] as Color, size: 32),
+                                        ),
+                                        const SizedBox(height: 20),
+                                        Text(cat['label'] as String, 
+                                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                          ),
+                        ),
+                        const SizedBox(height: 60),
+                        FadeInUp(
+                          delay: const Duration(milliseconds: 800),
+                          child: _actionButton(
+                            label: 'Close Catalog',
+                            icon: Icons.close_rounded,
+                            onPressed: () => setState(() => _showCatalog = false),
+                            isPrimary: true,
+                          ),
+                        ),
+                        const SizedBox(height: 40),
+                      ],
                     ),
-                  );
-                }),
+                  ),
+                ),
               ),
             ),
-            const SizedBox(height: 48),
-            FadeInUp(
-              delay: const Duration(milliseconds: 800),
-              child: _actionButton(
-                label: 'Close Catalog',
-                icon: Icons.close_rounded,
-                onPressed: () => setState(() => _showCatalog = false),
-                isPrimary: true,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
