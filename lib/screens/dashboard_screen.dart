@@ -83,16 +83,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void _onMenuItemSelected(int index) {
-    if (index == 0) {
-      setState(() => _selectedIndex = index);
-      return;
-    }
-
-    if (widget.isGuest) {
-      _showLoginRequiredPrompt();
-    } else {
-      setState(() => _selectedIndex = index);
-    }
+    setState(() => _selectedIndex = index);
   }
 
   void _showLoginRequiredPrompt() {

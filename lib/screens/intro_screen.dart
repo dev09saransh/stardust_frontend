@@ -102,14 +102,13 @@ class _IntroScreenState extends State<IntroScreen>
                             style: TextStyle(
                                 fontSize: 32,
                                 fontWeight: FontWeight.w300,
-                                color: AppTheme.platinum,
+                                color: Theme.of(context).colorScheme.onSurface,
                                 height: 1.2,
                                 letterSpacing: 1)),
                         const SizedBox(height: 10),
                         Text('Your assets, your rules, forever protected',
                             style: TextStyle(
-                                color: AppTheme.silverMist
-                                    .withValues(alpha: 0.5),
+                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                                 fontSize: 14,
                                 letterSpacing: 0.5)),
                       ]),
@@ -143,13 +142,12 @@ class _IntroScreenState extends State<IntroScreen>
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600,
-                                            color: AppTheme.platinum)),
+                                            color: Theme.of(context).colorScheme.onSurface)),
                                     const SizedBox(height: 4),
                                     Text(f['desc'] as String,
                                         style: TextStyle(
                                             fontSize: 12,
-                                            color: AppTheme.silverMist
-                                                .withValues(alpha: 0.5))),
+                                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5))),
                                   ],
                                 ),
                               ),

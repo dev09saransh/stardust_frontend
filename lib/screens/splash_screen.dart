@@ -90,13 +90,13 @@ class _SplashScreenState extends State<SplashScreen>
                       style: TextStyle(
                           fontSize: 40,
                           fontWeight: FontWeight.w300,
-                          color: AppTheme.platinum,
+                          color: Theme.of(context).colorScheme.onSurface,
                           letterSpacing: 6)),
                   const SizedBox(height: 12),
                   Text('SECURE YOUR DIGITAL LEGACY',
                       style: TextStyle(
                           fontSize: 12,
-                          color: AppTheme.silverMist.withValues(alpha: 0.5),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                           letterSpacing: 3,
                           fontWeight: FontWeight.w400)),
                 ],
