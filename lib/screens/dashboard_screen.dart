@@ -727,8 +727,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _actionButton({required String label, IconData? icon, required VoidCallback onPressed, required bool isPrimary}) {
-    return ElevatedButton(
+  Widget _actionButton({required String label, IconData? icon, required VoidCallback onPressed, required bool isPrimary, double? width}) {
+    final button = ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: isPrimary ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.primary.withValues(alpha: 0.05),
@@ -739,12 +739,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if (icon != null) Icon(icon, size: 18),
           if (label.isNotEmpty) ...[const SizedBox(width: 8), Text(label, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 12))],
         ],
       ),
     );
+
+    if (width != null) {
+      return SizedBox(width: width, child: button);
+    }
+    return button;
   }
 
   Widget _mainContentArea(BuildContext context, bool isWide) {
