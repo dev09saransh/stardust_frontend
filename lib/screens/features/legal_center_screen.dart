@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../widgets/stardust_background.dart';
 import '../../widgets/glass_card.dart';
-import '../../widgets/gradient_button.dart';
 import '../../widgets/success_animation.dart';
 import '../../widgets/add_doc_sheet.dart';
 import '../../widgets/login_prompt.dart';
-import '../../theme.dart';
 import 'package:animate_do/animate_do.dart';
 import '../../widgets/drop_zone_wrapper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -147,20 +145,22 @@ class _LegalCenterScreenState extends State<LegalCenterScreen> {
   }
 
   Widget _header(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(isMobile ? 12 : 16),
       child: Row(
         children: [
           IconButton(
             icon: Icon(Icons.arrow_back_ios_rounded,
-                color: Theme.of(context).colorScheme.onSurfaceVariant),
+                color: Theme.of(context).colorScheme.onSurface,
+                size: isMobile ? 20 : 24),
             onPressed: widget.onBack ?? () => Navigator.pop(context),
           ),
           const SizedBox(width: 8),
           Text('Legal Center',
               style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w400,
+                  fontSize: isMobile ? 22 : 28,
+                  fontWeight: FontWeight.w900,
                   color: Theme.of(context).colorScheme.onSurface)),
         ],
       ),

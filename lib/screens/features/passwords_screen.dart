@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../widgets/stardust_background.dart';
 import '../../widgets/glass_card.dart';
-import '../../widgets/gradient_button.dart';
 import '../../widgets/success_animation.dart';
 import '../../widgets/add_password_sheet.dart';
 import '../../widgets/login_prompt.dart';
-import '../../theme.dart';
 import 'package:animate_do/animate_do.dart';
 
 class PasswordsScreen extends StatefulWidget {

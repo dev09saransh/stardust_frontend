@@ -615,8 +615,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _appBar(bool isWide) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isVeryNarrow = screenWidth < 450;
+
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
+      padding: EdgeInsets.fromLTRB(isVeryNarrow ? 12 : 24, 16, isVeryNarrow ? 12 : 24, 16),
       child: Row(
         children: [
           if (!isWide)
@@ -626,22 +629,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           const Spacer(),
           _themeToggle(),
-          const SizedBox(width: 20),
-          _userProfile(),
-          const SizedBox(width: 20),
+          SizedBox(width: isVeryNarrow ? 8 : 20),
+          _userProfile(isVeryNarrow),
+          SizedBox(width: isVeryNarrow ? 8 : 20),
           _actionButton(
-            label: 'Scan or Upload',
+            label: isVeryNarrow ? '' : 'Scan',
             icon: Icons.document_scanner_rounded,
             onPressed: () => widget.isGuest ? _showLoginRequiredPrompt() : setState(() => _showDocumentCatalog = true),
             isPrimary: true,
           ),
-          const SizedBox(width: 12),
-          _actionButton(
-            label: 'Add New Resource',
-            icon: Icons.add,
-            onPressed: () => widget.isGuest ? _showLoginRequiredPrompt() : _showAddAssetSheet(),
-            isPrimary: true,
-          ),
+          if (!isVeryNarrow) ...[
+            const SizedBox(width: 12),
+            _actionButton(
+              label: 'Add Resource',
+              icon: Icons.add,
+              onPressed: () => widget.isGuest ? _showLoginRequiredPrompt() : _showAddAssetSheet(),
+              isPrimary: true,
+            ),
+          ],
         ],
       ),
     );
@@ -682,19 +687,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _userProfile() {
+  Widget _userProfile(bool isNarrow) {
     return Row(
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(widget.isGuest ? 'Guest' : 'User',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Theme.of(context).colorScheme.onSurface)),
-            Text(widget.isGuest ? 'GUEST' : 'PREMIUM',
-                style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary, letterSpacing: 1)),
-          ],
-        ),
-        const SizedBox(width: 12),
+        if (!isNarrow) ...[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(widget.isGuest ? 'Guest' : 'User',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Theme.of(context).colorScheme.onSurface)),
+              Text(widget.isGuest ? 'GUEST' : 'PREMIUM',
+                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary, letterSpacing: 1)),
+            ],
+          ),
+          const SizedBox(width: 12),
+        ],
         CircleAvatar(
           radius: 18,
           backgroundColor: Theme.of(context).colorScheme.primary,
@@ -712,13 +719,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
         foregroundColor: isPrimary ? Colors.white : Theme.of(context).colorScheme.primary,
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (icon != null) ...[Icon(icon, size: 16), const SizedBox(width: 8)],
-          Text(label, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12)),
+          if (icon != null) Icon(icon, size: 18),
+          if (label.isNotEmpty) ...[const SizedBox(width: 8), Text(label, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 12))],
         ],
       ),
     );
@@ -758,8 +765,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     duration: const Duration(milliseconds: 600),
                     child: GlowingText(welcomeMsg,
                         style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w800,
+                            fontSize: isWide ? 48 : 32,
+                            fontWeight: FontWeight.w900,
                             color: Theme.of(context).colorScheme.onSurface)),
                   ),
                   const SizedBox(height: 8),
@@ -844,8 +851,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _premiumHeroCard() {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+
     return GlassCard(
-      padding: const EdgeInsets.symmetric(vertical: 80, horizontal: 40),
+      padding: EdgeInsets.symmetric(vertical: isMobile ? 40 : 80, horizontal: isMobile ? 24 : 40),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),
@@ -857,7 +867,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Text(
                 'Your Digital Legacy, Secured.',
                 style: TextStyle(
-                  fontSize: 48,
+                  fontSize: isMobile ? 32 : 48,
                   fontWeight: FontWeight.w900,
                   color: Theme.of(context).colorScheme.onSurface,
                   letterSpacing: -1,
@@ -868,9 +878,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Text(
                 'Welcome to Stardust. The most private and secure way to catalog your wealth, store your sensitive documents, and ensure your family has everything they need when it matters most.',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: isMobile ? 14 : 16,
                   height: 1.6,
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -903,8 +914,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _heroActionButtons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 16,
+      runSpacing: 16,
       children: [
         _heroButton(
           label: 'Scan / Upload',
@@ -912,14 +925,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           onPressed: () => widget.isGuest ? _showLoginRequiredPrompt() : setState(() => _showDocumentCatalog = true),
           isPrimary: true,
         ),
-        const SizedBox(width: 16),
         _heroButton(
           label: 'Add Nominee',
           icon: Icons.person_add_outlined,
           onPressed: () => widget.isGuest ? _showLoginRequiredPrompt() : _showAddNomineeSheet(),
           isPrimary: false,
         ),
-        const SizedBox(width: 16),
         _heroButton(
           label: 'View Catalog',
           onPressed: () => setState(() => _showCatalog = true),
@@ -931,18 +942,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _heroButton({required String label, IconData? icon, required VoidCallback onPressed, required bool isPrimary, bool isGhost = false}) {
-    return Expanded(
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minWidth: 140),
       child: InkWell(
         onTap: onPressed,
         borderRadius: BorderRadius.circular(12),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
           decoration: BoxDecoration(
             color: isPrimary 
                 ? Theme.of(context).colorScheme.primary 
-                : (isGhost ? Colors.transparent : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
+                : (isGhost ? Colors.transparent : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1)),
             borderRadius: BorderRadius.circular(12),
-            border: isGhost ? Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1)) : null,
+            border: isGhost ? Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2), width: 1.5) : null,
             boxShadow: isPrimary ? [
               BoxShadow(
                 color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
@@ -952,14 +964,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ] : [],
           ),
           child: Row(
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (icon != null) ...[Icon(icon, color: isPrimary ? Colors.white : Theme.of(context).colorScheme.onSurface, size: 18), const SizedBox(width: 8)],
-              Text(label, style: TextStyle(
-                color: isPrimary ? Colors.white : Theme.of(context).colorScheme.onSurface,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              )),
+              if (icon != null) ...[Icon(icon, size: 18, color: isPrimary ? Colors.white : Theme.of(context).colorScheme.primary), const SizedBox(width: 8)],
+              Text(label, style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13, color: isPrimary ? Colors.white : Theme.of(context).colorScheme.onSurface)),
             ],
           ),
         ),

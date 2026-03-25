@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../theme.dart';
 
 class GlowingText extends StatelessWidget {
   final String text;
@@ -15,6 +14,11 @@ class GlowingText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    // More intense glow for Light Mode to combat high ambient brightness
+    final double spreadFactor = isDark ? 1.0 : 1.5;
+
     return Stack(
       children: [
         // The Glow
@@ -25,12 +29,12 @@ class GlowingText extends StatelessWidget {
             color: Colors.transparent,
             shadows: [
               Shadow(
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
-                blurRadius: 20,
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: isDark ? 0.5 : 0.8),
+                blurRadius: 20 * spreadFactor,
               ),
               Shadow(
-                color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.3),
-                blurRadius: 40,
+                color: Theme.of(context).colorScheme.secondary.withValues(alpha: isDark ? 0.3 : 0.6),
+                blurRadius: 40 * spreadFactor,
               ),
             ],
           ),
@@ -39,7 +43,9 @@ class GlowingText extends StatelessWidget {
         Text(
           text,
           textAlign: textAlign,
-          style: style,
+          style: (style ?? const TextStyle()).copyWith(
+            fontWeight: FontWeight.bold, // Ensure it's bold as part of the structure
+          ),
         ),
       ],
     );
