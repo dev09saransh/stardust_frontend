@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:ui' as ui;
 import '../main.dart';
 import '../widgets/stardust_background.dart';
 import '../widgets/glass_card.dart';
@@ -16,6 +17,7 @@ import '../widgets/intro_modal.dart';
 import '../widgets/guided_tour.dart';
 import '../widgets/add_asset_sheet.dart';
 import '../widgets/add_contact_sheet.dart';
+import '../widgets/add_doc_sheet.dart';
 import '../widgets/success_animation.dart';
 import '../widgets/login_prompt.dart';
 
@@ -279,7 +281,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: Container(
             color: Colors.black.withValues(alpha: 0.85),
             child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
               child: Center(
                 child: GestureDetector(
                   onTap: () {}, // Prevent closing when clicking inside
@@ -381,7 +383,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: Container(
             color: Colors.black.withValues(alpha: 0.85),
             child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
               child: Center(
                 child: GestureDetector(
                   onTap: () {},

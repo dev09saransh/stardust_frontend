@@ -29,12 +29,15 @@ class _LegalCenterScreenState extends State<LegalCenterScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (sheetContext) => AddDocSheet(onAdd: (title) {
-        setState(() {
-          widget.docs.add({'title': title, 'date': 'Today', 'status': 'Pending'});
-        });
-        SuccessAnimationOverlay.show(context);
-      }),
+      builder: (sheetContext) => AddDocSheet(
+        type: 'Legal',
+        onAdd: (title) {
+          setState(() {
+            widget.docs.add({'title': title, 'date': 'Today', 'status': 'Pending'});
+          });
+          SuccessAnimationOverlay.show(context);
+        },
+      ),
     );
   }
 
