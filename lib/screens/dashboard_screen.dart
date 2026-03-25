@@ -20,7 +20,6 @@ import '../widgets/add_doc_sheet.dart';
 import '../widgets/success_animation.dart';
 import '../widgets/login_prompt.dart';
 import '../widgets/floating_glass_nav.dart';
-import 'dart:math' as math;
 
 class DashboardScreen extends StatefulWidget {
   final bool isGuest;
@@ -159,7 +158,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final isWide = MediaQuery.of(context).size.width > 1100;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       key: _scaffoldKey,
@@ -197,15 +195,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             if (_showTour)
               GuidedTour(
                 onStepChange: (index) {
-                  final targetIndex = [
-                    0, // Overview
-                    1, // Assets
-                    2, // Insurance
-                    3, // Passwords
-                    4, // Legal Center
-                    5, // Contacts
-                    6, // Security Log
-                  ][index];
+                  final targetIndex = [0, 1, 2, 3, 4, 5, 6][index];
                   setState(() => _selectedIndex = targetIndex);
                 },
                 steps: [
@@ -258,16 +248,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
               _documentCatalogOverlay(),
           ],
         ),
-        bottomNavigationBar: !isWide ? FloatingGlassNav(
-          currentIndex: _selectedIndex == 0 ? 0 : (_selectedIndex == 2 ? 1 : (_selectedIndex == 6 ? 3 : 0)),
-          onTap: (index) {
-            if (index == 0) setState(() => _selectedIndex = 0);
-            else if (index == 1) setState(() => _selectedIndex = 2); // Assets
-            else if (index == 2) setState(() => _showDocumentCatalog = true);
-            else if (index == 3) setState(() => _selectedIndex = 6); // Settings
-          },
-        ) : null,
       ),
+      bottomNavigationBar: !isWide ? FloatingGlassNav(
+        currentIndex: _selectedIndex == 0 ? 0 : (_selectedIndex == 2 ? 1 : (_selectedIndex == 6 ? 3 : 0)),
+        onTap: (index) {
+          if (index == 0) {
+            setState(() => _selectedIndex = 0);
+          } else if (index == 1) {
+            setState(() => _selectedIndex = 2); // Assets
+          } else if (index == 2) {
+            setState(() => _showDocumentCatalog = true);
+          } else if (index == 3) {
+            setState(() => _selectedIndex = 6); // Settings
+          }
+        },
+      ) : null,
     );
   }
 
@@ -758,6 +753,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
+
+  Widget _mainContentArea(BuildContext context, bool isWide) {
+    final screens = [
+      _dashboardHome(context, isWide),
+      AssetsScreen(assets: _assets, onBack: () => setState(() => _selectedIndex = 0), isGuest: widget.isGuest),
+      InsuranceScreen(policies: _policies, onBack: () => setState(() => _selectedIndex = 0), isGuest: widget.isGuest),
+      PasswordsScreen(passwords: _passwords, onBack: () => setState(() => _selectedIndex = 0), isGuest: widget.isGuest),
+      LegalCenterScreen(docs: _docs, onBack: () => setState(() => _selectedIndex = 0), isGuest: widget.isGuest),
+      ContactsScreen(contacts: _contacts, onBack: () => setState(() => _selectedIndex = 0), isGuest: widget.isGuest),
+      SecurityLogScreen(),
+    ];
 
     return Column(
       children: [
