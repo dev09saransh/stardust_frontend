@@ -9,7 +9,6 @@ import 'features/insurance_screen.dart';
 import 'features/passwords_screen.dart';
 import 'features/contacts_screen.dart';
 import 'features/legal_center_screen.dart';
-import 'features/settings_screen.dart';
 import 'features/security_log_screen.dart';
 import 'package:animate_do/animate_do.dart';
 import '../widgets/glowing_text.dart';
@@ -273,13 +272,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
       {'label': 'Settings', 'icon': Icons.settings_outlined, 'color': Colors.grey},
     ];
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark 
+        ? Colors.black.withValues(alpha: 0.85) 
+        : Theme.of(context).colorScheme.primary.withValues(alpha: 0.95);
+    final textColor = isDark ? Colors.white : Colors.white; // Keep white for contrast on primary tint
+
     return Positioned.fill(
       child: FadeIn(
         duration: const Duration(milliseconds: 300),
         child: GestureDetector(
           onTap: () => setState(() => _showCatalog = false),
           child: Container(
-            color: Colors.black.withValues(alpha: 0.85),
+            color: bgColor,
             child: BackdropFilter(
               filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
               child: Center(
@@ -291,14 +296,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       children: [
                         const SizedBox(height: 40),
                         FadeInDown(
-                          child: const Text('Asset Catalog', 
-                            style: TextStyle(fontSize: 42, fontWeight: FontWeight.w900, color: Colors.white, letterSpacing: -1)),
+                          child: Text('Asset Catalog', 
+                            style: TextStyle(fontSize: 42, fontWeight: FontWeight.w900, color: textColor, letterSpacing: -1)),
                         ),
                         const SizedBox(height: 12),
                         FadeInDown(
                           delay: const Duration(milliseconds: 100),
                           child: Text('Explore your vault categories', 
-                            style: TextStyle(fontSize: 16, color: Colors.white.withValues(alpha: 0.6))),
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor.withValues(alpha: 0.8))),
                         ),
                         const SizedBox(height: 60),
                         Container(
@@ -324,14 +329,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         Container(
                                           padding: const EdgeInsets.all(16),
                                           decoration: BoxDecoration(
-                                            color: (cat['color'] as Color).withValues(alpha: 0.1),
+                                            color: isDark 
+                                                ? (cat['color'] as Color).withValues(alpha: 0.1)
+                                                : Colors.white.withValues(alpha: 0.2),
                                             shape: BoxShape.circle,
+                                            border: isDark ? null : Border.all(color: Colors.white.withValues(alpha: 0.3)),
                                           ),
-                                          child: Icon(cat['icon'] as IconData, color: cat['color'] as Color, size: 32),
+                                          child: Icon(cat['icon'] as IconData, 
+                                            color: isDark ? (cat['color'] as Color) : Colors.white, 
+                                            size: 32),
                                         ),
                                         const SizedBox(height: 20),
                                         Text(cat['label'] as String, 
-                                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)),
+                                          style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: Colors.white)),
                                       ],
                                     ),
                                   ),
@@ -375,13 +385,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
       {'label': 'Others', 'icon': Icons.more_horiz_rounded, 'color': Colors.grey},
     ];
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark 
+        ? Colors.black.withValues(alpha: 0.85) 
+        : Theme.of(context).colorScheme.primary.withValues(alpha: 0.95);
+    final textColor = isDark ? Colors.white : Colors.white;
+
     return Positioned.fill(
       child: FadeIn(
         duration: const Duration(milliseconds: 300),
         child: GestureDetector(
           onTap: () => setState(() => _showDocumentCatalog = false),
           child: Container(
-            color: Colors.black.withValues(alpha: 0.85),
+            color: bgColor,
             child: BackdropFilter(
               filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
               child: Center(
@@ -393,14 +409,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       children: [
                         const SizedBox(height: 40),
                         FadeInDown(
-                          child: const Text('Select Document Type', 
-                            style: TextStyle(fontSize: 42, fontWeight: FontWeight.w900, color: Colors.white, letterSpacing: -1)),
+                          child: Text('Select Document Type', 
+                            style: TextStyle(fontSize: 42, fontWeight: FontWeight.w900, color: textColor, letterSpacing: -1)),
                         ),
                         const SizedBox(height: 12),
                         FadeInDown(
                           delay: const Duration(milliseconds: 100),
                           child: Text('What type of document would you like to scan or upload?', 
-                            style: TextStyle(fontSize: 16, color: Colors.white.withValues(alpha: 0.6))),
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor.withValues(alpha: 0.8))),
                         ),
                         const SizedBox(height: 60),
                         Container(
@@ -429,14 +445,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         Container(
                                           padding: const EdgeInsets.all(16),
                                           decoration: BoxDecoration(
-                                            color: (type['color'] as Color).withValues(alpha: 0.1),
+                                            color: isDark 
+                                                ? (type['color'] as Color).withValues(alpha: 0.1)
+                                                : Colors.white.withValues(alpha: 0.2),
                                             shape: BoxShape.circle,
+                                            border: isDark ? null : Border.all(color: Colors.white.withValues(alpha: 0.3)),
                                           ),
-                                          child: Icon(type['icon'] as IconData, color: type['color'] as Color, size: 32),
+                                          child: Icon(type['icon'] as IconData, 
+                                            color: isDark ? (type['color'] as Color) : Colors.white, 
+                                            size: 32),
                                         ),
                                         const SizedBox(height: 20),
                                         Text(type['label'] as String, 
-                                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)),
+                                          style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: Colors.white)),
                                       ],
                                     ),
                                   ),
@@ -1032,8 +1053,8 @@ class _SidebarTileState extends State<_SidebarTile> {
                 Text(
                   widget.label,
                   style: TextStyle(
-                    color: isSelected ? Colors.white : (active ? Theme.of(context).colorScheme.onSurface : color),
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                    color: isSelected ? Colors.white : (active ? Theme.of(context).colorScheme.onSurface : color.withValues(alpha: Theme.of(context).brightness == Brightness.dark ? 0.4 : 0.8)),
+                    fontWeight: FontWeight.w900,
                     fontSize: 14,
                   ),
                 ),

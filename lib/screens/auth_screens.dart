@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../widgets/stardust_background.dart';
 import '../widgets/glass_card.dart';
 import '../widgets/gradient_button.dart';
-import '../widgets/glowing_text.dart';
 import '../theme.dart';
 
 // ─── Unified Auth Screen ───
@@ -272,14 +271,15 @@ class ForgotPasswordScreen extends StatelessWidget {
                     Text('Forgot Password',
                         style: TextStyle(
                             fontSize: 28,
-                            fontWeight: FontWeight.w300,
-                            color: AppTheme.platinum,
+                            fontWeight: FontWeight.w900,
+                            color: Theme.of(context).colorScheme.onSurface,
                             letterSpacing: 1)),
                     const SizedBox(height: 8),
                     Text('Enter your email to receive a reset link',
                         style: TextStyle(
-                            color: AppTheme.silverMist.withValues(alpha: 0.5),
-                            fontSize: 14)),
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold)),
                     const SizedBox(height: 32),
                     GlassCard(
                       child: Column(children: [
@@ -332,14 +332,15 @@ class RecoverAccountScreen extends StatelessWidget {
                     Text('Recover Account',
                         style: TextStyle(
                             fontSize: 28,
-                            fontWeight: FontWeight.w300,
-                            color: AppTheme.platinum,
+                            fontWeight: FontWeight.w900,
+                            color: Theme.of(context).colorScheme.onSurface,
                             letterSpacing: 1)),
                     const SizedBox(height: 8),
                     Text('Enter your email or recovery identifier',
                         style: TextStyle(
-                            color: AppTheme.silverMist.withValues(alpha: 0.5),
-                            fontSize: 14)),
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold)),
                     const SizedBox(height: 32),
                     GlassCard(
                       child: Column(children: [
@@ -422,14 +423,15 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                     Text('Verification',
                         style: TextStyle(
                             fontSize: 28,
-                            fontWeight: FontWeight.w300,
-                            color: AppTheme.platinum,
+                            fontWeight: FontWeight.w900,
+                            color: Theme.of(context).colorScheme.onSurface,
                             letterSpacing: 1)),
                     const SizedBox(height: 8),
                     Text('Enter the 4-digit code sent to your email',
                         style: TextStyle(
-                            color: AppTheme.silverMist.withValues(alpha: 0.5),
-                            fontSize: 14)),
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold)),
                     const SizedBox(height: 32),
                     GlassCard(
                       child: Column(children: [
@@ -445,10 +447,10 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                                 textAlign: TextAlign.center,
                                 keyboardType: TextInputType.number,
                                 maxLength: 1,
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppTheme.platinum),
+                                    fontWeight: FontWeight.w900,
+                                    color: Theme.of(context).colorScheme.onSurface),
                                 decoration: InputDecoration(
                                   counterText: '',
                                   contentPadding: const EdgeInsets.symmetric(
