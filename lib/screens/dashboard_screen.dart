@@ -274,9 +274,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDark 
-        ? Colors.black.withValues(alpha: 0.85) 
-        : Theme.of(context).colorScheme.primary.withValues(alpha: 0.95);
-    final textColor = isDark ? Colors.white : Colors.white; // Keep white for contrast on primary tint
+        ? Colors.black.withValues(alpha: 0.4) 
+        : Colors.white.withValues(alpha: 0.2);
+    final textColor = Theme.of(context).colorScheme.onSurface;
 
     return Positioned.fill(
       child: FadeIn(
@@ -286,7 +286,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: Container(
             color: bgColor,
             child: BackdropFilter(
-              filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              filter: ui.ImageFilter.blur(sigmaX: 20, sigmaY: 20),
               child: Center(
                 child: GestureDetector(
                   onTap: () {}, // Prevent closing when clicking inside
@@ -303,7 +303,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         FadeInDown(
                           delay: const Duration(milliseconds: 100),
                           child: Text('Explore your vault categories', 
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor.withValues(alpha: 0.8))),
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor.withValues(alpha: 0.6))),
                         ),
                         const SizedBox(height: 60),
                         Container(
@@ -329,19 +329,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         Container(
                                           padding: const EdgeInsets.all(16),
                                           decoration: BoxDecoration(
-                                            color: isDark 
-                                                ? (cat['color'] as Color).withValues(alpha: 0.1)
-                                                : Colors.white.withValues(alpha: 0.2),
+                                            color: (cat['color'] as Color).withValues(alpha: 0.1),
                                             shape: BoxShape.circle,
-                                            border: isDark ? null : Border.all(color: Colors.white.withValues(alpha: 0.3)),
+                                            border: Border.all(color: (cat['color'] as Color).withValues(alpha: 0.2)),
                                           ),
                                           child: Icon(cat['icon'] as IconData, 
-                                            color: isDark ? (cat['color'] as Color) : Colors.white, 
+                                            color: cat['color'] as Color, 
                                             size: 32),
                                         ),
                                         const SizedBox(height: 20),
                                         Text(cat['label'] as String, 
-                                          style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: Colors.white)),
+                                          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: textColor)),
                                       ],
                                     ),
                                   ),
@@ -387,9 +385,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDark 
-        ? Colors.black.withValues(alpha: 0.85) 
-        : Theme.of(context).colorScheme.primary.withValues(alpha: 0.95);
-    final textColor = isDark ? Colors.white : Colors.white;
+        ? Colors.black.withValues(alpha: 0.4) 
+        : Colors.white.withValues(alpha: 0.2);
+    final textColor = Theme.of(context).colorScheme.onSurface;
 
     return Positioned.fill(
       child: FadeIn(
@@ -399,7 +397,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: Container(
             color: bgColor,
             child: BackdropFilter(
-              filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              filter: ui.ImageFilter.blur(sigmaX: 20, sigmaY: 20),
               child: Center(
                 child: GestureDetector(
                   onTap: () {},
@@ -416,7 +414,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         FadeInDown(
                           delay: const Duration(milliseconds: 100),
                           child: Text('What type of document would you like to scan or upload?', 
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor.withValues(alpha: 0.8))),
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor.withValues(alpha: 0.6))),
                         ),
                         const SizedBox(height: 60),
                         Container(
@@ -445,19 +443,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         Container(
                                           padding: const EdgeInsets.all(16),
                                           decoration: BoxDecoration(
-                                            color: isDark 
-                                                ? (type['color'] as Color).withValues(alpha: 0.1)
-                                                : Colors.white.withValues(alpha: 0.2),
+                                            color: (type['color'] as Color).withValues(alpha: 0.1),
                                             shape: BoxShape.circle,
-                                            border: isDark ? null : Border.all(color: Colors.white.withValues(alpha: 0.3)),
+                                            border: Border.all(color: (type['color'] as Color).withValues(alpha: 0.2)),
                                           ),
                                           child: Icon(type['icon'] as IconData, 
-                                            color: isDark ? (type['color'] as Color) : Colors.white, 
+                                            color: type['color'] as Color, 
                                             size: 32),
                                         ),
                                         const SizedBox(height: 20),
                                         Text(type['label'] as String, 
-                                          style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: Colors.white)),
+                                          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: textColor)),
                                       ],
                                     ),
                                   ),
