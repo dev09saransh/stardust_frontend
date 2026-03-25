@@ -35,11 +35,11 @@ class _GlassCardState extends State<GlassCard> {
     
     final Color bgColor = isDark 
         ? Colors.white.withValues(alpha: _isHovered ? 0.07 : 0.04)
-        : Colors.white.withValues(alpha: _isHovered ? 0.95 : 0.9);
+        : Colors.white.withValues(alpha: _isHovered ? 1.0 : 0.98);
     
     final Color borderColor = isDark
         ? colorScheme.primary.withValues(alpha: _isHovered ? 0.4 : 0.15)
-        : colorScheme.primary.withValues(alpha: _isHovered ? 0.3 : 0.1);
+        : colorScheme.primary.withValues(alpha: _isHovered ? 0.3 : 0.4); // Higher border visibility in light mode
 
     Widget card = AnimatedScale(
       scale: _isHovered ? 1.02 : 1.0,
@@ -55,7 +55,7 @@ class _GlassCardState extends State<GlassCard> {
             BoxShadow(
               color: isDark 
                   ? colorScheme.primary.withValues(alpha: _isHovered ? 0.15 : 0.05)
-                  : colorScheme.primary.withValues(alpha: _isHovered ? 0.1 : 0.05),
+                  : Colors.black.withValues(alpha: _isHovered ? 0.08 : 0.04), // Cleaner shadow for light mode
               blurRadius: _isHovered ? 40 : 20,
               spreadRadius: _isHovered ? 2 : 0,
               offset: Offset(0, _isHovered ? 12 : 6),
@@ -71,7 +71,7 @@ class _GlassCardState extends State<GlassCard> {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(widget.borderRadius),
           child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: isDark ? 20 : 30, sigmaY: isDark ? 20 : 30),
+            filter: ImageFilter.blur(sigmaX: isDark ? 20 : 10, sigmaY: isDark ? 20 : 10), // Less blur in light mode for clarity
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 400),
               padding: widget.padding ?? const EdgeInsets.all(20),
@@ -82,18 +82,13 @@ class _GlassCardState extends State<GlassCard> {
                   color: borderColor,
                   width: _isHovered ? 1.5 : 1.0,
                 ),
-                gradient: LinearGradient(
+                gradient: !isDark ? null : LinearGradient( // Remove gradient in light mode for solid white look
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: isDark 
-                    ? [
-                        Colors.white.withValues(alpha: 0.05),
-                        Colors.white.withValues(alpha: 0.01),
-                      ]
-                    : [
-                        Colors.white.withValues(alpha: 0.4),
-                        Colors.white.withValues(alpha: 0.1),
-                      ],
+                  colors: [
+                    Colors.white.withValues(alpha: 0.05),
+                    Colors.white.withValues(alpha: 0.01),
+                  ],
                 ),
               ),
               child: widget.child,

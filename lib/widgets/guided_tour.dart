@@ -1,3 +1,4 @@
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import '../theme.dart';
@@ -41,7 +42,19 @@ class _GuidedTourState extends State<GuidedTour> {
 
     return Stack(
       children: [
-        // No overlay container here to ensure 100% transparency as requested
+        // Semi-transparent overlay for contrast
+        Positioned.fill(
+          child: FadeIn(
+            duration: const Duration(milliseconds: 300),
+            child: Container(
+              color: Colors.black.withValues(alpha: 0.4),
+              child: BackdropFilter(
+                filter: ui.ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                child: const SizedBox.expand(),
+              ),
+            ),
+          ),
+        ),
         Center(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
@@ -51,14 +64,14 @@ class _GuidedTourState extends State<GuidedTour> {
                 padding: const EdgeInsets.all(28),
                 decoration: BoxDecoration(
                   color: Theme.of(context).brightness == Brightness.dark 
-                    ? Colors.black.withValues(alpha: 0.7)
-                    : Colors.white.withValues(alpha: 0.85),
+                    ? const Color(0xFF1E1E2C).withValues(alpha: 0.95)
+                    : Colors.white.withValues(alpha: 0.98),
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.1),
-                      blurRadius: 20,
-                      spreadRadius: 5,
+                      color: Colors.black.withValues(alpha: 0.2),
+                      blurRadius: 30,
+                      spreadRadius: 10,
                     ),
                   ],
                 ),

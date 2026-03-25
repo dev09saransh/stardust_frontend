@@ -401,19 +401,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: GestureDetector(
                   onTap: () {},
                   child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 60),
                         FadeInDown(
                           child: Text('Select Document Type', 
-                            style: TextStyle(fontSize: 42, fontWeight: FontWeight.w900, color: textColor, letterSpacing: -1)),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 32, fontWeight: FontWeight.w900, color: textColor, letterSpacing: -0.5)),
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 16),
                         FadeInDown(
                           delay: const Duration(milliseconds: 100),
-                          child: Text('What type of document would you like to scan or upload?', 
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor.withValues(alpha: 0.6))),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            child: Text('What type of document would you like to scan or upload?', 
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: textColor.withValues(alpha: 0.6))),
+                          ),
                         ),
                         const SizedBox(height: 60),
                         Container(
