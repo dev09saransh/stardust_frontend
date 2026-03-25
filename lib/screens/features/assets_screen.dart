@@ -7,6 +7,7 @@ import '../../widgets/login_prompt.dart';
 import 'package:animate_do/animate_do.dart';
 import '../../widgets/drop_zone_wrapper.dart';
 import '../../widgets/add_doc_sheet.dart';
+import '../../widgets/card_benefits_sheet.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AssetsScreen extends StatefulWidget {
@@ -153,12 +154,25 @@ class _AssetsScreenState extends State<AssetsScreen> with SingleTickerProviderSt
       itemCount: filtered.length,
       itemBuilder: (context, index) {
         final asset = filtered[index];
+        final isCard = asset['type'] == 'Card';
+        
         return FadeInUp(
           duration: const Duration(milliseconds: 400),
           delay: Duration(milliseconds: index * 100),
           child: Padding(
             padding: const EdgeInsets.only(bottom: 16),
             child: GlassCard(
+              onTap: isCard ? () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) => CardBenefitsSheet(
+                    cardName: asset['name']!,
+                    cardVariant: asset['value']!,
+                  ),
+                );
+              } : null,
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
@@ -169,9 +183,9 @@ class _AssetsScreenState extends State<AssetsScreen> with SingleTickerProviderSt
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
-                      asset['type'] == 'Digital'
-                          ? Icons.currency_bitcoin_rounded
-                          : Icons.inventory_2_rounded,
+                      isCard 
+                          ? Icons.credit_card_rounded
+                          : (asset['type'] == 'Digital' ? Icons.currency_bitcoin_rounded : Icons.inventory_2_rounded),
                       color: Theme.of(context).colorScheme.primary,
                       size: 24,
                     ),
@@ -186,10 +200,13 @@ class _AssetsScreenState extends State<AssetsScreen> with SingleTickerProviderSt
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
                                 color: Theme.of(context).colorScheme.onSurface)),
-                        Text(asset['type']!,
+                        Text(isCard ? 'Tap to view benefits' : asset['type']!,
                             style: TextStyle(
                                 fontSize: 12,
-                                color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.6))),
+                                fontWeight: isCard ? FontWeight.bold : FontWeight.normal,
+                                color: isCard 
+                                    ? Theme.of(context).colorScheme.primary 
+                                    : Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.6))),
                       ],
                     ),
                   ),
