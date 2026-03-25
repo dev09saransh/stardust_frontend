@@ -19,6 +19,8 @@ import '../widgets/add_contact_sheet.dart';
 import '../widgets/add_doc_sheet.dart';
 import '../widgets/success_animation.dart';
 import '../widgets/login_prompt.dart';
+import '../widgets/floating_glass_nav.dart';
+import 'dart:math' as math;
 
 class DashboardScreen extends StatefulWidget {
   final bool isGuest;
@@ -256,6 +258,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
               _documentCatalogOverlay(),
           ],
         ),
+        bottomNavigationBar: !isWide ? FloatingGlassNav(
+          currentIndex: _selectedIndex == 0 ? 0 : (_selectedIndex == 2 ? 1 : (_selectedIndex == 6 ? 3 : 0)),
+          onTap: (index) {
+            if (index == 0) setState(() => _selectedIndex = 0);
+            else if (index == 1) setState(() => _selectedIndex = 2); // Assets
+            else if (index == 2) setState(() => _showDocumentCatalog = true);
+            else if (index == 3) setState(() => _selectedIndex = 6); // Settings
+          },
+        ) : null,
       ),
     );
   }
@@ -748,19 +759,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _mainContentArea(BuildContext context, bool isWide) {
-    // Filter screens
-    final screens = [
-      _dashboardHome(context, isWide),
-      AssetsScreen(assets: _assets, onBack: () => setState(() => _selectedIndex = 0), isGuest: widget.isGuest),
-      InsuranceScreen(policies: _policies, onBack: () => setState(() => _selectedIndex = 0), isGuest: widget.isGuest),
-      PasswordsScreen(passwords: _passwords, onBack: () => setState(() => _selectedIndex = 0), isGuest: widget.isGuest),
-      LegalCenterScreen(docs: _docs, onBack: () => setState(() => _selectedIndex = 0), isGuest: widget.isGuest),
-      ContactsScreen(contacts: _contacts, onBack: () => setState(() => _selectedIndex = 0), isGuest: widget.isGuest),
-      SecurityLogScreen(),
-    ];
-
-    return screens[_selectedIndex];
+    return Column(
+      children: [
+        Expanded(child: screens[_selectedIndex]),
+        if (!isWide) const SizedBox(height: 80),
+      ],
+    );
   }
 
   Widget _dashboardHome(BuildContext context, bool isWide) {
