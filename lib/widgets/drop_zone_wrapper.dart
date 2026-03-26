@@ -24,8 +24,8 @@ class _DropZoneWrapperState extends State<DropZoneWrapper> {
 
   bool _isComputer(BuildContext context) {
     if (kIsWeb) {
-      // On web, consider it a computer if the width is desktop-class
-      return MediaQuery.sizeOf(context).width >= 1024;
+      // On web, consider it a computer if the width is desktop-class (>= 800px)
+      return MediaQuery.sizeOf(context).width >= 800;
     }
     // On native, check for desktop platforms
     final platform = Theme.of(context).platform;
@@ -49,6 +49,7 @@ class _DropZoneWrapperState extends State<DropZoneWrapper> {
       },
       child: Stack(
         children: [
+          widget.child,
           // ─── Permanent Hint Layer (Watermark) ───
           if (isComputer)
             Positioned.fill(
@@ -56,7 +57,7 @@ class _DropZoneWrapperState extends State<DropZoneWrapper> {
                 child: FadeIn(
                   duration: const Duration(seconds: 2),
                   child: Opacity(
-                    opacity: 0.05,
+                    opacity: 0.08, // Slightly increased for better visibility
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -81,7 +82,6 @@ class _DropZoneWrapperState extends State<DropZoneWrapper> {
                 ),
               ),
             ),
-          widget.child,
           if (_isHovering && isComputer)
             _buildDropOverlay(),
         ],
