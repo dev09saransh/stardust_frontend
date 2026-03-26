@@ -10,7 +10,7 @@ import '../theme.dart';
 
 class AddDocSheet extends StatefulWidget {
   final String type;
-  final Function(String) onAdd;
+  final Function(String title, String? filePath) onAdd;
   final XFile? initialFile;
 
   const AddDocSheet({
@@ -168,7 +168,7 @@ class _AddDocSheetState extends State<AddDocSheet> {
               text: 'Vault Document',
               onPressed: (_pickedFile != null && _titleController.text.isNotEmpty)
                   ? () {
-                      widget.onAdd(_titleController.text);
+                      widget.onAdd(_titleController.text, _pickedFile?.path);
                       Navigator.pop(context);
                     }
                   : null,

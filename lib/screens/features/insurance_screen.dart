@@ -8,6 +8,7 @@ import 'package:animate_do/animate_do.dart';
 import '../../widgets/drop_zone_wrapper.dart';
 import '../../widgets/add_doc_sheet.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../widgets/document_viewer.dart';
 import '../../theme.dart';
 
 class InsuranceScreen extends StatefulWidget {
@@ -52,12 +53,13 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
       builder: (sheetContext) => AddDocSheet(
         type: 'Insurance',
         initialFile: file,
-        onAdd: (title) {
+        onAdd: (title, filePath) {
           setState(() {
             widget.policies.add({
               'provider': title,
               'policyNo': 'UPLOAD-${DateTime.now().millisecond}',
-              'type': 'General'
+              'type': 'General',
+              if (filePath != null) 'filePath': filePath,
             });
           });
           SuccessAnimationOverlay.show(context);
@@ -91,6 +93,13 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                               child: Padding(
                                 padding: const EdgeInsets.only(bottom: AppSpacing.medium),
                                 child: GlassCard(
+                                  onTap: policy['filePath'] != null ? () {
+                                    DocumentViewer.show(
+                                      context,
+                                      title: policy['provider']!,
+                                      filePath: policy['filePath'],
+                                    );
+                                  } : null,
                                   padding: const EdgeInsets.all(AppSpacing.medium),
                                   child: Row(
                                     children: [

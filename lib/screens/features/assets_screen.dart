@@ -9,6 +9,7 @@ import '../../widgets/drop_zone_wrapper.dart';
 import '../../widgets/add_doc_sheet.dart';
 import '../../widgets/card_benefits_sheet.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../widgets/document_viewer.dart';
 import '../../theme.dart';
 
 class AssetsScreen extends StatefulWidget {
@@ -78,12 +79,13 @@ class _AssetsScreenState extends State<AssetsScreen> with SingleTickerProviderSt
       builder: (sheetContext) => AddDocSheet(
         type: 'Asset',
         initialFile: file,
-        onAdd: (title) {
+        onAdd: (title, filePath) {
           setState(() {
             widget.assets.add({
               'name': title,
               'value': 'Uploaded File',
-              'type': 'Physical'
+              'type': 'Physical',
+              if (filePath != null) 'filePath': filePath,
             });
           });
           SuccessAnimationOverlay.show(context);
@@ -177,7 +179,13 @@ class _AssetsScreenState extends State<AssetsScreen> with SingleTickerProviderSt
                     cardVariant: asset['value']!,
                   ),
                 );
-              } : null,
+              } : (asset['filePath'] != null ? () {
+                DocumentViewer.show(
+                  context,
+                  title: asset['name']!,
+                  filePath: asset['filePath'],
+                );
+              } : null),
               padding: const EdgeInsets.all(AppSpacing.medium),
               child: Row(
                 children: [

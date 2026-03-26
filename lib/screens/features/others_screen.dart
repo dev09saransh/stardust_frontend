@@ -7,6 +7,7 @@ import '../../widgets/login_prompt.dart';
 import 'package:animate_do/animate_do.dart';
 import '../../widgets/drop_zone_wrapper.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../widgets/document_viewer.dart';
 import '../../theme.dart';
 
 class OthersScreen extends StatefulWidget {
@@ -32,9 +33,14 @@ class _OthersScreenState extends State<OthersScreen> {
       backgroundColor: Colors.transparent,
       builder: (sheetContext) => AddDocSheet(
         type: 'Others',
-        onAdd: (title) {
+        onAdd: (title, filePath) {
           setState(() {
-            widget.others.add({'title': title, 'date': DateTime.now().toString().split(' ')[0], 'status': 'Vaulted'});
+            widget.others.add({
+              'title': title,
+              'date': DateTime.now().toString().split(' ')[0],
+              'status': 'Vaulted',
+              if (filePath != null) 'filePath': filePath,
+            });
           });
           SuccessAnimationOverlay.show(context);
         },
@@ -54,9 +60,14 @@ class _OthersScreenState extends State<OthersScreen> {
       builder: (sheetContext) => AddDocSheet(
         type: 'Others',
         initialFile: file,
-        onAdd: (title) {
+        onAdd: (title, filePath) {
           setState(() {
-            widget.others.add({'title': title, 'date': DateTime.now().toString().split(' ')[0], 'status': 'Vaulted'});
+            widget.others.add({
+              'title': title,
+              'date': DateTime.now().toString().split(' ')[0],
+              'status': 'Vaulted',
+              if (filePath != null) 'filePath': filePath,
+            });
           });
           SuccessAnimationOverlay.show(context);
         },
@@ -89,6 +100,13 @@ class _OthersScreenState extends State<OthersScreen> {
                               child: Padding(
                                 padding: const EdgeInsets.only(bottom: AppSpacing.medium),
                                 child: GlassCard(
+                                  onTap: () => DocumentViewer.show(
+                                    context,
+                                    title: d['title']!,
+                                    filePath: d['filePath'],
+                                    date: d['date'],
+                                    status: d['status'],
+                                  ),
                                   padding: const EdgeInsets.all(AppSpacing.medium),
                                   child: Row(
                                     children: [

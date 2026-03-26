@@ -8,6 +8,7 @@ import '../../widgets/login_prompt.dart';
 import '../../widgets/drop_zone_wrapper.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../widgets/document_viewer.dart';
 import '../../theme.dart';
 
 class ContactsScreen extends StatefulWidget {
@@ -34,13 +35,14 @@ class _ContactsScreenState extends State<ContactsScreen> {
       builder: (sheetContext) => AddDocSheet(
         type: 'Identity',
         initialFile: file,
-        onAdd: (title) {
+        onAdd: (title, filePath) {
           setState(() {
             widget.contacts.add({
               'name': title,
               'relation': 'Identity Doc',
               'phone': 'N/A',
-              'status': 'Pending'
+              'status': 'Pending',
+              if (filePath != null) 'filePath': filePath,
             });
           });
           SuccessAnimationOverlay.show(context);
@@ -92,6 +94,14 @@ class _ContactsScreenState extends State<ContactsScreen> {
                             child: Padding(
                               padding: const EdgeInsets.only(bottom: AppSpacing.medium),
                               child: GlassCard(
+                                onTap: c['filePath'] != null ? () {
+                                  DocumentViewer.show(
+                                    context,
+                                    title: c['name']!,
+                                    filePath: c['filePath'],
+                                    status: c['status'],
+                                  );
+                                } : null,
                                 padding: const EdgeInsets.all(AppSpacing.medium),
                                 child: Row(
                                   children: [

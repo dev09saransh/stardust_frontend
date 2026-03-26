@@ -4,6 +4,7 @@ import '../../widgets/glass_card.dart';
 import '../../widgets/success_animation.dart';
 import '../../widgets/add_doc_sheet.dart';
 import '../../widgets/login_prompt.dart';
+import '../../widgets/document_viewer.dart';
 import 'package:animate_do/animate_do.dart';
 import '../../widgets/drop_zone_wrapper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -32,9 +33,14 @@ class _LegalCenterScreenState extends State<LegalCenterScreen> {
       backgroundColor: Colors.transparent,
       builder: (sheetContext) => AddDocSheet(
         type: 'Legal',
-        onAdd: (title) {
+        onAdd: (title, filePath) {
           setState(() {
-            widget.docs.add({'title': title, 'date': 'Today', 'status': 'Pending'});
+            widget.docs.add({
+              'title': title,
+              'date': 'Today',
+              'status': 'Pending',
+              if (filePath != null) 'filePath': filePath,
+            });
           });
           SuccessAnimationOverlay.show(context);
         },
@@ -54,9 +60,14 @@ class _LegalCenterScreenState extends State<LegalCenterScreen> {
       builder: (sheetContext) => AddDocSheet(
         type: 'Legal',
         initialFile: file,
-        onAdd: (title) {
+        onAdd: (title, filePath) {
           setState(() {
-            widget.docs.add({'title': title, 'date': 'Today', 'status': 'Vaulted'});
+            widget.docs.add({
+              'title': title,
+              'date': 'Today',
+              'status': 'Vaulted',
+              if (filePath != null) 'filePath': filePath,
+            });
           });
           SuccessAnimationOverlay.show(context);
         },
@@ -89,6 +100,13 @@ class _LegalCenterScreenState extends State<LegalCenterScreen> {
                               child: Padding(
                                 padding: const EdgeInsets.only(bottom: AppSpacing.medium),
                                 child: GlassCard(
+                                  onTap: () => DocumentViewer.show(
+                                    context,
+                                    title: d['title']!,
+                                    filePath: d['filePath'],
+                                    date: d['date'],
+                                    status: d['status'],
+                                  ),
                                   padding: const EdgeInsets.all(AppSpacing.medium),
                                   child: Row(
                                     children: [

@@ -144,21 +144,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
       backgroundColor: Colors.transparent,
       builder: (sheetContext) => AddDocSheet(
         type: type,
-        onAdd: (title) {
+        onAdd: (title, filePath) {
           setState(() {
             switch (type) {
               case 'Assets':
                 _assets.add({
                   'name': title,
                   'value': 'Scanned',
-                  'type': 'Digital'
+                  'type': 'Digital',
+                  if (filePath != null) 'filePath': filePath,
                 });
                 break;
               case 'Insurance':
                 _policies.add({
                   'provider': title,
                   'policyNo': 'SCAN-${DateTime.now().millisecondsSinceEpoch % 10000}',
-                  'type': 'Scanned'
+                  'type': 'Scanned',
+                  if (filePath != null) 'filePath': filePath,
                 });
                 break;
               case 'Passwords':
@@ -173,14 +175,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   'name': title,
                   'relation': 'Identity Doc',
                   'phone': 'N/A',
-                  'status': 'Pending'
+                  'status': 'Pending',
+                  if (filePath != null) 'filePath': filePath,
                 });
                 break;
               case 'Others':
                 _others.add({
                   'title': title,
                   'date': DateTime.now().toString().split(' ')[0],
-                  'status': 'Vaulted'
+                  'status': 'Vaulted',
+                  if (filePath != null) 'filePath': filePath,
                 });
                 break;
               case 'Legal Docs':
@@ -188,7 +192,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 _docs.add({
                   'title': title,
                   'date': DateTime.now().toString().split(' ')[0],
-                  'status': 'Vaulted'
+                  'status': 'Vaulted',
+                  if (filePath != null) 'filePath': filePath,
                 });
                 break;
             }
