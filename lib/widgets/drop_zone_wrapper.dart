@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:ui' as ui;
@@ -21,8 +22,22 @@ class DropZoneWrapper extends StatefulWidget {
 class _DropZoneWrapperState extends State<DropZoneWrapper> {
   bool _isHovering = false;
 
+  bool _isComputer(BuildContext context) {
+    if (kIsWeb) {
+      // On web, consider it a computer if the width is desktop-class
+      return MediaQuery.sizeOf(context).width >= 1024;
+    }
+    // On native, check for desktop platforms
+    final platform = Theme.of(context).platform;
+    return platform == TargetPlatform.windows ||
+        platform == TargetPlatform.macOS ||
+        platform == TargetPlatform.linux;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final bool isComputer = _isComputer(context);
+
     return DropTarget(
       onDragEntered: (details) => setState(() => _isHovering = true),
       onDragExited: (details) => setState(() => _isHovering = false),
@@ -35,35 +50,39 @@ class _DropZoneWrapperState extends State<DropZoneWrapper> {
       child: Stack(
         children: [
           // ─── Permanent Hint Layer (Watermark) ───
-          Positioned.fill(
-            child: IgnorePointer(
-              child: Opacity(
-                opacity: 0.05,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.cloud_upload_outlined,
-                      size: 200,
-                      color: Theme.of(context).colorScheme.primary,
+          if (isComputer)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: FadeIn(
+                  duration: const Duration(seconds: 2),
+                  child: Opacity(
+                    opacity: 0.05,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.cloud_upload_outlined,
+                          size: 200,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Drag & Drop Zone',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 2,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Drag & Drop Zone',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 2,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
-          ),
           widget.child,
-          if (_isHovering)
+          if (_isHovering && isComputer)
             _buildDropOverlay(),
         ],
       ),
