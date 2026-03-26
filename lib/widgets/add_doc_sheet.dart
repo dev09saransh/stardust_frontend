@@ -43,48 +43,59 @@ class _AddDocSheetState extends State<AddDocSheet> {
     }
   }
 
-  /// Launch the native document scanner (edge detection + auto-crop)
+  /// Launch the native document scanner (camera → edge detection → auto-crop)
+  /// Like CamScanner: opens camera, detects document edges, crops automatically
   Future<void> _scanDocument() async {
-    if (kIsWeb) {
-      // Web doesn't support native scanning — fall back to file upload
-      _pickFromGallery();
-      return;
+    // On mobile: try native document scanner first (CamScanner-like experience)
+    if (!kIsWeb) {
+      try {
+        final List<String>? imagesPath = await CunningDocumentScanner.getPictures(
+          noOfPages: 1,
+          isGalleryImportAllowed: false, // Camera only — no file picker
+        );
+
+        if (imagesPath != null && imagesPath.isNotEmpty) {
+          setState(() {
+            _pickedFile = XFile(imagesPath.first);
+          });
+          if (_titleController.text.isEmpty) {
+            _titleController.text = '${widget.type} Scan ${DateTime.now().day}/${DateTime.now().month}';
+          }
+          return;
+        }
+      } catch (e) {
+        debugPrint('Document Scanner Error: $e');
+        // Fall through to camera picker fallback below
+      }
     }
 
+    // Fallback: open camera directly via image_picker (works on web + mobile)
     try {
-      // cunning_document_scanner: Android + iOS, edge detection, auto-crop
-      final List<String>? imagesPath = await CunningDocumentScanner.getPictures(
-        noOfPages: 1,
-        isGalleryImportAllowed: true,
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.camera,
+        maxWidth: 1800,
+        maxHeight: 1800,
+        imageQuality: 90,
       );
-
-      if (imagesPath != null && imagesPath.isNotEmpty) {
+      if (image != null) {
         setState(() {
-          _pickedFile = XFile(imagesPath.first);
+          _pickedFile = image;
         });
-        // Auto-populate title if empty
         if (_titleController.text.isEmpty) {
           _titleController.text = '${widget.type} Scan ${DateTime.now().day}/${DateTime.now().month}';
         }
-        return;
       }
     } catch (e) {
-      debugPrint('Document Scanner Error: $e');
+      debugPrint('Camera fallback error: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Scanner unavailable. Please use file upload instead.'),
-            action: SnackBarAction(
-              label: 'Upload',
-              onPressed: _pickFromGallery,
-            ),
-          ),
+          const SnackBar(content: Text('Camera not available. Try uploading a file instead.')),
         );
       }
     }
   }
 
-  /// Pick an image from the gallery (works everywhere)
+  /// Pick a file from gallery/files (no camera involved)
   Future<void> _pickFromGallery() async {
     try {
       final XFile? image = await _picker.pickImage(
