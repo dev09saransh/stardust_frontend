@@ -3,11 +3,12 @@ import 'glass_card.dart';
 import 'gradient_button.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import '../theme.dart';
 import '../services/upload_service.dart';
+import '../utils/scanner_interface.dart'
+    if (dart.library.io) '../utils/scanner_mobile.dart'
+    if (dart.library.html) '../utils/scanner_web.dart' as scanner;
 
 class AddDocSheet extends StatefulWidget {
   final String type;
@@ -57,7 +58,7 @@ class _AddDocSheetState extends State<AddDocSheet> {
 
     try {
       final result = await _uploadService.uploadFile(
-        File(_pickedFile!.path), 
+        _pickedFile!, 
         folder: widget.type.toLowerCase(),
       );
       
@@ -74,17 +75,14 @@ class _AddDocSheetState extends State<AddDocSheet> {
   }
 
   /// Launch the native document scanner (camera → edge detection → auto-crop)
-  Future<void> _scanDocument() async {
     if (!kIsWeb) {
       try {
-        final List<String>? imagesPath = await CunningDocumentScanner.getPictures(
-          noOfPages: 1,
-          isGalleryImportAllowed: false,
-        );
+        final scannerInstance = scanner.getScanner();
+        final XFile? scannedFile = await scannerInstance.scanDocument(widget.type);
 
-        if (imagesPath != null && imagesPath.isNotEmpty) {
+        if (scannedFile != null) {
           setState(() {
-            _pickedFile = XFile(imagesPath.first);
+            _pickedFile = scannedFile;
           });
           _populateTitleFromFilename();
           if (_titleController.text.isEmpty) {
@@ -252,7 +250,7 @@ class _AddDocSheetState extends State<AddDocSheet> {
             Positioned.fill(
               child: kIsWeb
                   ? Image.network(_pickedFile!.path, fit: BoxFit.cover)
-                  : Image.file(File(_pickedFile!.path), fit: BoxFit.cover),
+                  : Image.network(_pickedFile!.path, fit: BoxFit.cover), // XFile handles this across platforms
             ),
             if (!_isUploading)
               Positioned(

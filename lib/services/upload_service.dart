@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../services/auth_service.dart';
@@ -14,7 +14,7 @@ class UploadService {
   static const String _baseUrl = 'http://localhost:5002/api/uploads';
   final AuthService _authService = AuthService();
 
-  Future<UploadResult> uploadFile(File file, {String folder = 'documents'}) async {
+  Future<UploadResult> uploadFile(XFile file, {String folder = 'documents'}) async {
     final token = await _authService.getToken();
     if (token == null) throw Exception('Authentication required');
 
@@ -22,9 +22,12 @@ class UploadService {
     request.headers['Authorization'] = 'Bearer $token';
     request.fields['folder'] = folder;
     
-    request.files.add(await http.MultipartFile.fromPath(
+    // Read bytes for universal compatibility (Web/Mobile)
+    final bytes = await file.readAsBytes();
+    request.files.add(http.MultipartFile.fromBytes(
       'file', 
-      file.path,
+      bytes,
+      filename: file.name,
     ));
 
     final streamedResponse = await request.send();
