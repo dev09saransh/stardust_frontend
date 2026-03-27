@@ -29,12 +29,15 @@ jobs:
 
       - name: Install dependencies
         run: flutter pub get
+        working-directory: .
 
       - name: Build APK
-        run: flutter build apk --release
+        run: flutter build apk --release --verbose
+        working-directory: .
 
       - name: Verify APK
         run: ls -R build/app/outputs/flutter-apk/
+        working-directory: .
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4

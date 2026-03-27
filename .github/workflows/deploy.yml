@@ -30,12 +30,15 @@ jobs:
 
       - name: Install dependencies
         run: flutter pub get
+        working-directory: .
 
       - name: Build Web
-        run: flutter build web --base-href "/stardust_vault/"
+        run: flutter build web --base-href "/stardust_vault/" --verbose
+        working-directory: .
 
       - name: Verify Web
         run: ls -R ./build/web
+        working-directory: .
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
