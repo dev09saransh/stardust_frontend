@@ -170,7 +170,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
              _showAddDocSheet('Assets');
           }
         },
-        backgroundColor: theme.colorScheme.primary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(Icons.document_scanner_rounded, color: Colors.white),
       ) : null,
       body: StardustBackground(
