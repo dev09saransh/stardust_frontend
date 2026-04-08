@@ -181,7 +181,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                       ),
                       child: Text('Continue as Guest →',
                           style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
                               fontSize: 14)),
                     ),
                   ],
@@ -203,7 +203,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
         gradient: AppTheme.buttonGradient,
         boxShadow: [
           BoxShadow(
-            color: AppTheme.lavenderAccent.withValues(alpha: 0.3),
+            color: AppTheme.lavenderAccent.withOpacity(0.3),
             blurRadius: 20,
             spreadRadius: 2,
           ),
@@ -218,7 +218,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
+            color: Theme.of(context).dividerColor.withOpacity(0.1),
           ),
         ),
       ),
@@ -227,7 +227,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
         indicatorColor: AppTheme.lavenderAccent,
         indicatorSize: TabBarIndicatorSize.tab,
         labelColor: Theme.of(context).colorScheme.onSurface,
-        unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+        unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
         tabs: const [
           Tab(text: 'Sign In'),
           Tab(text: 'Create Account'),
@@ -370,7 +370,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: active ? AppTheme.lavenderAccent : Colors.transparent,
-            border: Border.all(color: active ? AppTheme.lavenderAccent : Colors.grey.withValues(alpha: 0.5)),
+            border: Border.all(color: active ? AppTheme.lavenderAccent : Colors.grey.withOpacity(0.5)),
           ),
           child: Center(
             child: Text(
@@ -426,7 +426,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text('Enter your email to receive a reset link',
                         style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
                             fontSize: 14,
                             fontWeight: FontWeight.bold)),
                     const SizedBox(height: 32),
@@ -487,7 +487,7 @@ class RecoverAccountScreen extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text('Enter your email or recovery identifier',
                         style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
                             fontSize: 14,
                             fontWeight: FontWeight.bold)),
                     const SizedBox(height: 32),
@@ -627,7 +627,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                     const SizedBox(height: 8),
                     Text('Enter the 6-digit code sent to ${widget.destinationSnippet ?? 'your device'}',
                         style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
                             fontSize: 14,
                             fontWeight: FontWeight.bold)),
                     const SizedBox(height: 32),
@@ -736,10 +736,10 @@ class _OutlineButtonState extends State<_OutlineButton> {
             border: Border.all(
                 color: _hov
                     ? AppTheme.lavenderAccent
-                    : Colors.white.withValues(alpha: 0.15),
+                    : Colors.white.withOpacity(0.15),
                 width: 1.5),
             color: _hov
-                ? Colors.white.withValues(alpha: 0.04)
+                ? Colors.white.withOpacity(0.04)
                 : Colors.transparent,
           ),
           child: Row(

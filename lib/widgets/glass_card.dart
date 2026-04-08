@@ -35,12 +35,12 @@ class _GlassCardState extends State<GlassCard> {
     final colorScheme = Theme.of(context).colorScheme;
     
     final Color bgColor = isDark 
-        ? Colors.white.withValues(alpha: _isHovered ? 0.07 : 0.04)
-        : Colors.white.withValues(alpha: _isHovered ? 1.0 : 0.98);
+        ? Colors.white.withOpacity(_isHovered ? 0.07 : 0.04)
+        : Colors.white.withOpacity(_isHovered ? 1.0 : 0.98);
     
     final Color borderColor = isDark
-        ? colorScheme.primary.withValues(alpha: _isHovered ? 0.4 : 0.15)
-        : colorScheme.primary.withValues(alpha: _isHovered ? 0.3 : 0.4); 
+        ? colorScheme.primary.withOpacity(_isHovered ? 0.4 : 0.15)
+        : colorScheme.primary.withOpacity(_isHovered ? 0.3 : 0.4); 
 
     Widget card = AnimatedScale(
       scale: _isHovered ? 1.02 : 1.0,
@@ -55,15 +55,15 @@ class _GlassCardState extends State<GlassCard> {
           boxShadow: [
             BoxShadow(
               color: isDark 
-                  ? colorScheme.primary.withValues(alpha: _isHovered ? 0.15 : 0.05)
-                  : Colors.black.withValues(alpha: _isHovered ? 0.08 : 0.04),
+                  ? colorScheme.primary.withOpacity(_isHovered ? 0.15 : 0.05)
+                  : Colors.black.withOpacity(_isHovered ? 0.08 : 0.04),
               blurRadius: _isHovered ? 40 : 20,
               spreadRadius: _isHovered ? 2 : 0,
               offset: Offset(0, _isHovered ? 12 : 6),
             ),
             if (isDark && _isHovered)
               BoxShadow(
-                color: colorScheme.primary.withValues(alpha: 0.1),
+                color: colorScheme.primary.withOpacity(0.1),
                 blurRadius: 10,
                 spreadRadius: -2,
               ),
@@ -87,8 +87,8 @@ class _GlassCardState extends State<GlassCard> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.white.withValues(alpha: 0.05),
-                    Colors.white.withValues(alpha: 0.01),
+                    Colors.white.withOpacity(0.05),
+                    Colors.white.withOpacity(0.01),
                   ],
                 ),
               ),

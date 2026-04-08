@@ -9,18 +9,6 @@ import 'package:animate_do/animate_do.dart';
 import '../../widgets/drop_zone_wrapper.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../theme.dart';
-
-import 'package:flutter/material.dart';
-import '../../widgets/stardust_background.dart';
-import '../../widgets/glass_card.dart';
-import '../../widgets/success_animation.dart';
-import '../../widgets/add_doc_sheet.dart';
-import '../../widgets/login_prompt.dart';
-import '../../widgets/document_viewer.dart';
-import 'package:animate_do/animate_do.dart';
-import '../../widgets/drop_zone_wrapper.dart';
-import 'package:image_picker/image_picker.dart';
-import '../../theme.dart';
 import '../../services/legal_service.dart';
 
 class LegalCenterScreen extends StatefulWidget {
@@ -72,35 +60,31 @@ class _LegalCenterScreenState extends State<LegalCenterScreen> {
       LoginRequiredPrompt.show(context);
       return;
     }
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (sheetContext) => AddDocSheet(
-        type: 'Legal',
-        onAdd: (title, fileKey, fileUrl) async {
-          try {
-            await _legalService.addDocument({
-              'title': title,
-              'document_type': 'Legal',
-              'status': 'Vaulted',
-              'file_path': fileUrl ?? '',
-              'metadata': {
-                'file_key': fileKey,
-                'file_url': fileUrl,
-              },
-            });
-            _fetchDocs();
-            if (mounted) SuccessAnimationOverlay.show(context);
-          } catch (e) {
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Failed to save document: $e'), backgroundColor: Colors.redAccent),
-              );
-            }
+    AddDocSheet.show(
+      context,
+      docType: 'Legal',
+      onAdd: (title, fileKey, fileUrl) async {
+        try {
+          await _legalService.addDocument({
+            'title': title,
+            'document_type': 'Legal',
+            'status': 'Vaulted',
+            'file_path': fileUrl ?? '',
+            'metadata': {
+              'file_key': fileKey,
+              'file_url': fileUrl,
+            },
+          });
+          _fetchDocs();
+          if (mounted) SuccessAnimationOverlay.show(context);
+        } catch (e) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Failed to save document: $e'), backgroundColor: Colors.redAccent),
+            );
           }
-        },
-      ),
+        }
+      },
     );
   }
 
@@ -109,36 +93,32 @@ class _LegalCenterScreenState extends State<LegalCenterScreen> {
       LoginRequiredPrompt.show(context);
       return;
     }
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (sheetContext) => AddDocSheet(
-        type: 'Legal',
-        initialFile: file,
-        onAdd: (title, fileKey, fileUrl) async {
-          try {
-            await _legalService.addDocument({
-              'title': title,
-              'document_type': 'Legal',
-              'status': 'Vaulted',
-              'file_path': fileUrl ?? '',
-              'metadata': {
-                'file_key': fileKey,
-                'file_url': fileUrl,
-              },
-            });
-            _fetchDocs();
-            if (mounted) SuccessAnimationOverlay.show(context);
-          } catch (e) {
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Failed to save document: $e'), backgroundColor: Colors.redAccent),
-              );
-            }
+    AddDocSheet.show(
+      context,
+      docType: 'Legal',
+      initialFile: file,
+      onAdd: (title, fileKey, fileUrl) async {
+        try {
+          await _legalService.addDocument({
+            'title': title,
+            'document_type': 'Legal',
+            'status': 'Vaulted',
+            'file_path': fileUrl ?? '',
+            'metadata': {
+              'file_key': fileKey,
+              'file_url': fileUrl,
+            },
+          });
+          _fetchDocs();
+          if (mounted) SuccessAnimationOverlay.show(context);
+        } catch (e) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Failed to save document: $e'), backgroundColor: Colors.redAccent),
+            );
           }
-        },
-      ),
+        }
+      },
     );
   }
 
@@ -191,7 +171,7 @@ class _LegalCenterScreenState extends State<LegalCenterScreen> {
                                                 Container(
                                                   padding: const EdgeInsets.all(AppSpacing.medium - 4),
                                                   decoration: BoxDecoration(
-                                                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                                                    color: theme.colorScheme.primary.withOpacity(0.1),
                                                     shape: BoxShape.circle,
                                                   ),
                                                   child: Icon(
@@ -213,7 +193,7 @@ class _LegalCenterScreenState extends State<LegalCenterScreen> {
                                                   ),
                                                 ),
                                                 Icon(Icons.file_download_outlined,
-                                                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                                                    color: theme.colorScheme.onSurfaceVariant.withOpacity(0.6),
                                                     size: 20),
                                               ],
                                             ),
@@ -252,6 +232,20 @@ class _LegalCenterScreenState extends State<LegalCenterScreen> {
           const SizedBox(width: AppSpacing.small),
           Text('Legal Center',
               style: isMobile ? theme.textTheme.headlineMedium : theme.textTheme.headlineLarge),
+          const Spacer(),
+          // Original "Perfect" Scan Button
+          IconButton(
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(Icons.document_scanner_rounded, color: theme.colorScheme.primary, size: 24),
+            ),
+            tooltip: 'Scan Document',
+            onPressed: () => _onFileDropped(XFile('')), // This triggers AddDocSheet
+          ),
         ],
       ),
     );
@@ -264,11 +258,11 @@ class _LegalCenterScreenState extends State<LegalCenterScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.gavel_outlined,
-              size: 80, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.2)),
+              size: 80, color: theme.colorScheme.onSurfaceVariant.withOpacity(0.2)),
           const SizedBox(height: AppSpacing.medium),
           Text('No documents uploaded',
               style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5))),
+                  color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5))),
           if (!widget.isGuest) ...[
             const SizedBox(height: AppSpacing.medium),
             TextButton(onPressed: _fetchDocs, child: const Text('Refresh')),
@@ -277,5 +271,4 @@ class _LegalCenterScreenState extends State<LegalCenterScreen> {
       ),
     );
   }
-}
 }

@@ -15,7 +15,8 @@ class CardBenefit {
 }
 
 class CardBenefitsService {
-  static const String _baseUrl = 'http://localhost:5005';
+  // Global IP: http://localhost:5099/api
+  static const String _baseUrl = 'http://localhost:5099/api';
 
   Future<List<CardBenefit>> fetchBenefits(String bank, String variant, String network) async {
     try {

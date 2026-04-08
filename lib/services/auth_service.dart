@@ -87,4 +87,8 @@ class AuthService {
   Future<bool> isLoggedIn() async {
     return await _api.isAuthenticated();
   }
+
+  Future<String?> getToken() async {
+    return await _api.getToken();
+  }
 }

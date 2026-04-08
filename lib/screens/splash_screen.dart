@@ -61,15 +61,15 @@ class _SplashScreenState extends State<SplashScreen>
                           shape: BoxShape.circle,
                           gradient: LinearGradient(
                             colors: [
-                              AppTheme.lavenderAccent.withValues(alpha: 0.25),
-                              AppTheme.softPurple.withValues(alpha: 0.10),
+                              AppTheme.lavenderAccent.withOpacity(0.25),
+                              AppTheme.softPurple.withOpacity(0.10),
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: AppTheme.lavenderAccent.withValues(alpha: 0.2 + (0.1 * value)),
+                              color: AppTheme.lavenderAccent.withOpacity(0.2 + (0.1 * value)),
                               blurRadius: 60 + (20 * value),
                               spreadRadius: 20 + (10 * value),
                             ),
@@ -95,7 +95,7 @@ class _SplashScreenState extends State<SplashScreen>
                   Text('SECURE YOUR DIGITAL LEGACY',
                       style: TextStyle(
                           fontSize: 12,
-                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                           letterSpacing: 3,
                           fontWeight: FontWeight.w400)),
                 ],

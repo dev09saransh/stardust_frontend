@@ -57,7 +57,7 @@ class _CardBenefitsSheetState extends State<CardBenefitsSheet> {
               Container(
                 padding: const EdgeInsets.all(AppSpacing.medium - 4),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                  color: theme.colorScheme.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(Icons.credit_card_rounded, color: theme.colorScheme.primary),
@@ -78,7 +78,7 @@ class _CardBenefitsSheetState extends State<CardBenefitsSheet> {
                 onPressed: () => Navigator.pop(context),
                 icon: const Icon(Icons.close_rounded, size: 20),
                 style: IconButton.styleFrom(
-                  backgroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                  backgroundColor: theme.colorScheme.onSurface.withOpacity(0.05),
                 ),
               ),
             ],
@@ -95,7 +95,7 @@ class _CardBenefitsSheetState extends State<CardBenefitsSheet> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                  color: theme.colorScheme.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text('AI POWERED', 
@@ -144,7 +144,7 @@ class _CardBenefitsSheetState extends State<CardBenefitsSheet> {
                             Container(
                               padding: const EdgeInsets.all(AppSpacing.small + 2),
                               decoration: BoxDecoration(
-                                color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                                color: theme.colorScheme.onSurface.withOpacity(0.05),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Icon(benefit.icon, size: 20, color: theme.colorScheme.onSurface),
@@ -159,7 +159,7 @@ class _CardBenefitsSheetState extends State<CardBenefitsSheet> {
                                   const SizedBox(height: 2),
                                   Text(benefit.description,
                                       style: theme.textTheme.bodySmall?.copyWith(
-                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.4))),
+                                          color: theme.colorScheme.onSurface.withOpacity(0.4))),
                                 ],
                               ),
                             ),
@@ -180,7 +180,7 @@ class _CardBenefitsSheetState extends State<CardBenefitsSheet> {
               style: theme.textTheme.bodySmall?.copyWith(
                   fontSize: 10,
                   fontStyle: FontStyle.italic,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.3)),
+                  color: theme.colorScheme.onSurface.withOpacity(0.3)),
             ),
           ),
           const SizedBox(height: 16),

@@ -42,8 +42,8 @@ class _GradientButtonState extends State<GradientButton> {
                 ? AppTheme.buttonGradient
                 : LinearGradient(
                     colors: [
-                      Colors.grey.withValues(alpha: 0.2),
-                      Colors.grey.withValues(alpha: 0.1)
+                      Colors.grey.withOpacity(0.2),
+                      Colors.grey.withOpacity(0.1)
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -53,7 +53,7 @@ class _GradientButtonState extends State<GradientButton> {
                 ? [
                     BoxShadow(
                       color: AppTheme.lavenderAccent
-                          .withValues(alpha: _hovering ? 0.4 : 0.2),
+                          .withOpacity(_hovering ? 0.4 : 0.2),
                       blurRadius: _hovering ? 24 : 12,
                       offset: const Offset(0, 4),
                     ),
@@ -68,7 +68,7 @@ class _GradientButtonState extends State<GradientButton> {
                 Icon(widget.icon,
                     color: isEnabled
                         ? Colors.white
-                        : Colors.white.withValues(alpha: 0.3),
+                        : Colors.white.withOpacity(0.3),
                     size: 20),
                 const SizedBox(width: AppSpacing.small),
               ],
@@ -77,7 +77,7 @@ class _GradientButtonState extends State<GradientButton> {
                 style: theme.textTheme.labelLarge?.copyWith(
                   color: isEnabled
                       ? Colors.white
-                      : Colors.white.withValues(alpha: 0.3),
+                      : Colors.white.withOpacity(0.3),
                   fontSize: 16,
                 ),
               ),

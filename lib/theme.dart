@@ -53,7 +53,7 @@ class AppTheme {
         titleLarge: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold, color: platinum),
         bodyLarge: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w600, color: platinum),
         bodyMedium: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500, color: silverMist),
-        bodySmall: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500, color: silverMist.withValues(alpha: 0.7)),
+        bodySmall: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500, color: silverMist.withOpacity(0.7)),
         labelLarge: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
       ),
       appBarTheme: const AppBarTheme(
@@ -64,13 +64,13 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: Colors.white.withValues(alpha: 0.05),
+        fillColor: Colors.white.withOpacity(0.05),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: borderSubtle)),
         enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: borderSubtle)),
         focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: lavenderAccent, width: 2)),
         labelStyle: GoogleFonts.inter(color: silverMist),
-        hintStyle: GoogleFonts.inter(color: silverMist.withValues(alpha: 0.4)),
+        hintStyle: GoogleFonts.inter(color: silverMist.withOpacity(0.4)),
       ),
     );
   }
@@ -110,7 +110,7 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: Colors.black.withValues(alpha: 0.03),
+        fillColor: Colors.black.withOpacity(0.03),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFFEEEEEE))),
         enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFFEEEEEE))),

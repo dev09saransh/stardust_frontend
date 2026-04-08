@@ -7,6 +7,15 @@ class AddContactSheet extends StatefulWidget {
   final Function(String, String, String) onAdd;
   const AddContactSheet({super.key, required this.onAdd});
 
+  static void show(BuildContext context, {required Function(String, String, String) onAdd}) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => AddContactSheet(onAdd: onAdd),
+    );
+  }
+
   @override
   State<AddContactSheet> createState() => _AddContactSheetState();
 }

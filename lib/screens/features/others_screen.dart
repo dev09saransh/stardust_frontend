@@ -9,18 +9,6 @@ import '../../widgets/drop_zone_wrapper.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../widgets/document_viewer.dart';
 import '../../theme.dart';
-
-import 'package:flutter/material.dart';
-import '../../widgets/stardust_background.dart';
-import '../../widgets/glass_card.dart';
-import '../../widgets/success_animation.dart';
-import '../../widgets/add_doc_sheet.dart';
-import '../../widgets/login_prompt.dart';
-import 'package:animate_do/animate_do.dart';
-import '../../widgets/drop_zone_wrapper.dart';
-import 'package:image_picker/image_picker.dart';
-import '../../widgets/document_viewer.dart';
-import '../../theme.dart';
 import '../../services/others_service.dart';
 
 class OthersScreen extends StatefulWidget {
@@ -72,35 +60,32 @@ class _OthersScreenState extends State<OthersScreen> {
       LoginRequiredPrompt.show(context);
       return;
     }
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (sheetContext) => AddDocSheet(
-        type: 'Others',
-        onAdd: (title, fileKey, fileUrl) async {
-          try {
-            await _othersService.addOther({
-              'title': title,
-              'description': 'Miscellaneous document',
-              'status': 'Vaulted',
-              'file_path': fileUrl ?? '',
-              'metadata': {
-                'file_key': fileKey,
-                'file_url': fileUrl,
-              },
-            });
-            _fetchOthers();
-            if (mounted) SuccessAnimationOverlay.show(context);
-          } catch (e) {
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Failed to save document: $e'), backgroundColor: Colors.redAccent),
-              );
-            }
+    AddDocSheet.show(
+      context,
+      docType: 'Others',
+      onAdd: (title, fileKey, fileUrl) async {
+        try {
+          await _othersService.addOther({
+            'title': title,
+            'category': 'General',
+            'description': 'Miscellaneous document',
+            'status': 'Vaulted',
+            'file_key': fileKey,
+            'file_path': fileUrl ?? '',
+            'metadata': {
+              'file_url': fileUrl,
+            },
+          });
+          _fetchOthers();
+          if (mounted) SuccessAnimationOverlay.show(context);
+        } catch (e) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Failed to save document: $e'), backgroundColor: Colors.redAccent),
+            );
           }
-        },
-      ),
+        }
+      },
     );
   }
 
@@ -109,36 +94,33 @@ class _OthersScreenState extends State<OthersScreen> {
       LoginRequiredPrompt.show(context);
       return;
     }
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (sheetContext) => AddDocSheet(
-        type: 'Others',
-        initialFile: file,
-        onAdd: (title, fileKey, fileUrl) async {
-          try {
-            await _othersService.addOther({
-              'title': title,
-              'description': 'Dropped file',
-              'status': 'Vaulted',
-              'file_path': fileUrl ?? '',
-              'metadata': {
-                'file_key': fileKey,
-                'file_url': fileUrl,
-              },
-            });
-            _fetchOthers();
-            if (mounted) SuccessAnimationOverlay.show(context);
-          } catch (e) {
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Failed to save document: $e'), backgroundColor: Colors.redAccent),
-              );
-            }
+    AddDocSheet.show(
+      context,
+      docType: 'Others',
+      initialFile: file,
+      onAdd: (title, fileKey, fileUrl) async {
+        try {
+          await _othersService.addOther({
+            'title': title,
+            'category': 'General',
+            'description': 'Dropped file',
+            'status': 'Vaulted',
+            'file_key': fileKey,
+            'file_path': fileUrl ?? '',
+            'metadata': {
+              'file_url': fileUrl,
+            },
+          });
+          _fetchOthers();
+          if (mounted) SuccessAnimationOverlay.show(context);
+        } catch (e) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Failed to save document: $e'), backgroundColor: Colors.redAccent),
+            );
           }
-        },
-      ),
+        }
+      },
     );
   }
 
@@ -191,7 +173,7 @@ class _OthersScreenState extends State<OthersScreen> {
                                                 Container(
                                                   padding: const EdgeInsets.all(AppSpacing.medium - 4),
                                                   decoration: BoxDecoration(
-                                                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                                                    color: theme.colorScheme.primary.withOpacity(0.1),
                                                     shape: BoxShape.circle,
                                                   ),
                                                   child: Icon(
@@ -216,7 +198,7 @@ class _OthersScreenState extends State<OthersScreen> {
                                                   padding: const EdgeInsets.symmetric(
                                                       horizontal: AppSpacing.small, vertical: 4),
                                                   decoration: BoxDecoration(
-                                                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                                                    color: theme.colorScheme.primary.withOpacity(0.1),
                                                     borderRadius: BorderRadius.circular(8),
                                                   ),
                                                   child: Text(
@@ -275,16 +257,16 @@ class _OthersScreenState extends State<OthersScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.folder_open_outlined,
-              size: 80, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.2)),
+              size: 80, color: theme.colorScheme.onSurfaceVariant.withOpacity(0.2)),
           const SizedBox(height: AppSpacing.medium),
           Text('No documents added',
               style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5))),
+                  color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5))),
           const SizedBox(height: AppSpacing.small),
           Text('Drop files here or tap + to upload miscellaneous documents',
               textAlign: TextAlign.center,
               style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3))),
+                  color: theme.colorScheme.onSurfaceVariant.withOpacity(0.3))),
           if (!widget.isGuest) ...[
             const SizedBox(height: AppSpacing.medium),
             TextButton(onPressed: _fetchOthers, child: const Text('Refresh')),
@@ -293,5 +275,4 @@ class _OthersScreenState extends State<OthersScreen> {
       ),
     );
   }
-}
 }

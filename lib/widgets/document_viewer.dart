@@ -34,7 +34,7 @@ class DocumentViewer extends StatefulWidget {
       PageRouteBuilder(
         opaque: false,
         barrierDismissible: true,
-        barrierColor: Colors.black.withValues(alpha: 0.5),
+        barrierColor: Colors.black.withOpacity(0.5),
         transitionDuration: const Duration(milliseconds: 300),
         reverseTransitionDuration: const Duration(milliseconds: 200),
         pageBuilder: (context, animation, secondaryAnimation) {
@@ -114,8 +114,8 @@ class _DocumentViewerState extends State<DocumentViewer> {
           filter: ui.ImageFilter.blur(sigmaX: 20, sigmaY: 20),
           child: Container(
             color: isDark
-                ? Colors.black.withValues(alpha: 0.6)
-                : Colors.black.withValues(alpha: 0.3),
+                ? Colors.black.withOpacity(0.6)
+                : Colors.black.withOpacity(0.3),
             child: SafeArea(
               child: GestureDetector(
                 onTap: () {}, // Prevent closing when tapping content
@@ -151,7 +151,7 @@ class _DocumentViewerState extends State<DocumentViewer> {
               icon: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.1),
+                  color: Colors.white.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Icons.close_rounded,
@@ -176,7 +176,7 @@ class _DocumentViewerState extends State<DocumentViewer> {
                     Text(
                       'Added on ${widget.date}',
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: Colors.white.withValues(alpha: 0.6),
+                        color: Colors.white.withOpacity(0.6),
                       ),
                     ),
                 ],
@@ -187,10 +187,10 @@ class _DocumentViewerState extends State<DocumentViewer> {
                 padding: const EdgeInsets.symmetric(
                     horizontal: AppSpacing.medium, vertical: 6),
                 decoration: BoxDecoration(
-                  color: _statusColor(widget.status!).withValues(alpha: 0.2),
+                  color: _statusColor(widget.status!).withOpacity(0.2),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: _statusColor(widget.status!).withValues(alpha: 0.5),
+                    color: _statusColor(widget.status!).withOpacity(0.5),
                   ),
                 ),
                 child: Text(
@@ -225,7 +225,7 @@ class _DocumentViewerState extends State<DocumentViewer> {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.3),
+                    color: Colors.black.withOpacity(0.3),
                     blurRadius: 20,
                     spreadRadius: 5,
                   ),
@@ -263,16 +263,16 @@ class _DocumentViewerState extends State<DocumentViewer> {
             Container(
               padding: const EdgeInsets.all(AppSpacing.xlarge),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.05),
+                color: Colors.white.withOpacity(0.05),
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.1),
+                  color: Colors.white.withOpacity(0.1),
                 ),
               ),
               child: Icon(
                 Icons.description_outlined,
                 size: 64,
-                color: Colors.white.withValues(alpha: 0.3),
+                color: Colors.white.withOpacity(0.3),
               ),
             ),
             const SizedBox(height: AppSpacing.large),
@@ -288,7 +288,7 @@ class _DocumentViewerState extends State<DocumentViewer> {
               _error ?? 'No preview available for this document.',
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: Colors.white.withValues(alpha: 0.5),
+                color: Colors.white.withOpacity(0.5),
               ),
             ),
             if (widget.date != null) ...[
@@ -296,7 +296,7 @@ class _DocumentViewerState extends State<DocumentViewer> {
               Text(
                 'Added on ${widget.date}',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: Colors.white.withValues(alpha: 0.4),
+                  color: Colors.white.withOpacity(0.4),
                 ),
               ),
             ],
@@ -309,20 +309,20 @@ class _DocumentViewerState extends State<DocumentViewer> {
   Widget _errorState(ThemeData theme) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.huge),
-      color: Colors.black.withValues(alpha: 0.3),
+      color: Colors.black.withOpacity(0.3),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
             Icons.broken_image_outlined,
             size: 64,
-            color: Colors.white.withValues(alpha: 0.3),
+            color: Colors.white.withOpacity(0.3),
           ),
           const SizedBox(height: AppSpacing.medium),
           Text(
             'Unable to load image',
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: Colors.white.withValues(alpha: 0.5),
+              color: Colors.white.withOpacity(0.5),
             ),
           ),
           if (_error != null)
@@ -363,12 +363,12 @@ class _DocumentViewerState extends State<DocumentViewer> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 16, color: Colors.white.withValues(alpha: 0.3)),
+        Icon(icon, size: 16, color: Colors.white.withOpacity(0.3)),
         const SizedBox(width: 6),
         Text(
           text,
           style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.3),
+            color: Colors.white.withOpacity(0.3),
             fontSize: 12,
           ),
         ),

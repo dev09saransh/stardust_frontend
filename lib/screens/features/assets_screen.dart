@@ -11,20 +11,6 @@ import '../../widgets/card_benefits_sheet.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../widgets/document_viewer.dart';
 import '../../theme.dart';
-
-import 'package:flutter/material.dart';
-import '../../widgets/stardust_background.dart';
-import '../../widgets/glass_card.dart';
-import '../../widgets/success_animation.dart';
-import '../../widgets/add_asset_sheet.dart';
-import '../../widgets/login_prompt.dart';
-import 'package:animate_do/animate_do.dart';
-import '../../widgets/drop_zone_wrapper.dart';
-import '../../widgets/add_doc_sheet.dart';
-import '../../widgets/card_benefits_sheet.dart';
-import 'package:image_picker/image_picker.dart';
-import '../../widgets/document_viewer.dart';
-import '../../theme.dart';
 import '../../services/asset_service.dart';
 
 class AssetsScreen extends StatefulWidget {
@@ -95,34 +81,30 @@ class _AssetsScreenState extends State<AssetsScreen> with SingleTickerProviderSt
       return;
     }
     final currentCategory = _categories[_tabController.index];
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (sheetContext) => AddAssetSheet(
-        category: currentCategory,
-        onAdd: (name, value, type) async {
-          try {
-            await _assetService.addAsset({
-              'category': currentCategory,
-              'title': name,
-              'metadata': {
-                'value': value,
-                'type': type,
-              },
-              'is_encrypted': 1,
-            });
-            _fetchAssets();
-            if (mounted) SuccessAnimationOverlay.show(context);
-          } catch (e) {
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Failed to add asset: $e'), backgroundColor: Colors.redAccent),
-              );
-            }
+    AddAssetSheet.show(
+      context,
+      category: currentCategory,
+      onAdd: (name, value, type) async {
+        try {
+          await _assetService.addAsset({
+            'category': currentCategory,
+            'title': name,
+            'metadata': {
+              'value': value,
+              'type': type,
+            },
+            'is_encrypted': 1,
+          });
+          _fetchAssets();
+          if (mounted) SuccessAnimationOverlay.show(context);
+        } catch (e) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Failed to add asset: $e'), backgroundColor: Colors.redAccent),
+            );
           }
-        },
-      ),
+        }
+      },
     );
   }
 
@@ -131,37 +113,33 @@ class _AssetsScreenState extends State<AssetsScreen> with SingleTickerProviderSt
       LoginRequiredPrompt.show(context);
       return;
     }
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (sheetContext) => AddDocSheet(
-        type: 'Asset',
-        initialFile: file,
-        onAdd: (title, fileKey, fileUrl) async {
-          try {
-            await _assetService.addAsset({
-              'category': _categories[_tabController.index],
-              'title': title,
-              'metadata': {
-                'value': 'Cloud Document',
-                'type': 'Physical',
-                'file_key': fileKey,
-                'file_url': fileUrl,
-              },
-              'is_encrypted': 1,
-            });
-            _fetchAssets();
-            if (mounted) SuccessAnimationOverlay.show(context);
-          } catch (e) {
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Failed to save document info: $e'), backgroundColor: Colors.redAccent),
-              );
-            }
+    AddDocSheet.show(
+      context,
+      docType: 'Asset',
+      initialFile: file,
+      onAdd: (title, fileKey, fileUrl) async {
+        try {
+          await _assetService.addAsset({
+            'category': _categories[_tabController.index],
+            'title': title,
+            'metadata': {
+              'value': 'Cloud Document',
+              'type': 'Physical',
+              'file_key': fileKey,
+              'file_url': fileUrl,
+            },
+            'is_encrypted': 1,
+          });
+          _fetchAssets();
+          if (mounted) SuccessAnimationOverlay.show(context);
+        } catch (e) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Failed to save document info: $e'), backgroundColor: Colors.redAccent),
+            );
           }
-        },
-      ),
+        }
+      },
     );
   }
 
@@ -207,7 +185,7 @@ class _AssetsScreenState extends State<AssetsScreen> with SingleTickerProviderSt
         indicatorWeight: 3,
         dividerColor: Colors.transparent,
         labelColor: theme.colorScheme.onSurface,
-        unselectedLabelColor: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+        unselectedLabelColor: theme.colorScheme.onSurfaceVariant.withOpacity(0.5),
         labelStyle: theme.textTheme.titleLarge?.copyWith(fontSize: 16),
         unselectedLabelStyle: theme.textTheme.titleLarge?.copyWith(fontSize: 16, fontWeight: FontWeight.normal),
         tabs: _categories.map((cat) => Tab(text: cat)).toList(),
@@ -271,7 +249,7 @@ class _AssetsScreenState extends State<AssetsScreen> with SingleTickerProviderSt
                     Container(
                       padding: const EdgeInsets.all(AppSpacing.medium - 4),
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                        color: theme.colorScheme.primary.withOpacity(0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -326,6 +304,20 @@ class _AssetsScreenState extends State<AssetsScreen> with SingleTickerProviderSt
           const SizedBox(width: AppSpacing.small),
           Text('Assets',
               style: isMobile ? theme.textTheme.headlineMedium : theme.textTheme.headlineLarge),
+          const Spacer(),
+          // Original "Perfect" Scan Button
+          IconButton(
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(Icons.document_scanner_rounded, color: theme.colorScheme.primary, size: 24),
+            ),
+            tooltip: 'Scan Document',
+            onPressed: () => _onFileDropped(XFile('')), // This triggers AddDocSheet
+          ),
         ],
       ),
     );
@@ -338,11 +330,11 @@ class _AssetsScreenState extends State<AssetsScreen> with SingleTickerProviderSt
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.account_balance_wallet_outlined,
-              size: 80, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.2)),
+              size: 80, color: theme.colorScheme.onSurfaceVariant.withOpacity(0.2)),
           const SizedBox(height: AppSpacing.medium),
           Text('No assets added yet',
               style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5))),
+                  color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5))),
           if (!widget.isGuest) ...[
             const SizedBox(height: AppSpacing.medium),
             TextButton(onPressed: _fetchAssets, child: const Text('Refresh')),
@@ -351,5 +343,4 @@ class _AssetsScreenState extends State<AssetsScreen> with SingleTickerProviderSt
       ),
     );
   }
-}
 }

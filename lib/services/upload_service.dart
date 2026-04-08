@@ -11,6 +11,7 @@ class UploadResult {
 }
 
 class UploadService {
+  // Global IP: http://localhost:5099/api
   static const String _baseUrl = 'http://localhost:5002/api/uploads';
   final AuthService _authService = AuthService();
 

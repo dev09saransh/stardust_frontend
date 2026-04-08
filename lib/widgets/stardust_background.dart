@@ -84,7 +84,7 @@ class _StardustBackgroundState extends State<StardustBackground> with SingleTick
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        primaryGlow.withValues(alpha: isDark ? 0.05 : 0.08),
+                        primaryGlow.withOpacity(isDark ? 0.05 : 0.08),
                         Colors.transparent,
                       ],
                     ),
@@ -103,8 +103,8 @@ class _StardustBackgroundState extends State<StardustBackground> with SingleTick
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        primaryGlow.withValues(alpha: isDark ? (0.12 + (0.04 * _animation.value)) : 0.0),
-                        primaryGlow.withValues(alpha: isDark ? 0.04 : 0.0),
+                        primaryGlow.withOpacity(isDark ? (0.12 + (0.04 * _animation.value)) : 0.0),
+                        primaryGlow.withOpacity(isDark ? 0.04 : 0.0),
                         Colors.transparent,
                       ],
                       stops: const [0.0, 0.5, 1.0],
@@ -124,8 +124,8 @@ class _StardustBackgroundState extends State<StardustBackground> with SingleTick
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        secondaryGlow.withValues(alpha: isDark ? (0.10 + (0.03 * _animation.value)) : 0.0),
-                        secondaryGlow.withValues(alpha: isDark ? 0.03 : 0.0),
+                        secondaryGlow.withOpacity(isDark ? (0.10 + (0.03 * _animation.value)) : 0.0),
+                        secondaryGlow.withOpacity(isDark ? 0.03 : 0.0),
                         Colors.transparent,
                       ],
                       stops: const [0.0, 0.5, 1.0],
@@ -145,8 +145,8 @@ class _StardustBackgroundState extends State<StardustBackground> with SingleTick
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        const Color(0xFF9C27B0).withValues(alpha: isDark ? (0.08 + (0.02 * _animation.value)) : 0.0),
-                        const Color(0xFF9C27B0).withValues(alpha: isDark ? 0.02 : 0.0),
+                        const Color(0xFF9C27B0).withOpacity(isDark ? (0.08 + (0.02 * _animation.value)) : 0.0),
+                        const Color(0xFF9C27B0).withOpacity(isDark ? 0.02 : 0.0),
                         Colors.transparent,
                       ],
                       stops: const [0.0, 0.5, 1.0],

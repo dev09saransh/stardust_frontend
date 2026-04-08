@@ -10,19 +10,6 @@ import 'package:animate_do/animate_do.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../widgets/document_viewer.dart';
 import '../../theme.dart';
-
-import 'package:flutter/material.dart';
-import '../../widgets/stardust_background.dart';
-import '../../widgets/glass_card.dart';
-import '../../widgets/success_animation.dart';
-import '../../widgets/add_contact_sheet.dart';
-import '../../widgets/add_doc_sheet.dart';
-import '../../widgets/login_prompt.dart';
-import '../../widgets/drop_zone_wrapper.dart';
-import 'package:animate_do/animate_do.dart';
-import 'package:image_picker/image_picker.dart';
-import '../../widgets/document_viewer.dart';
-import '../../theme.dart';
 import '../../services/contact_service.dart';
 
 class ContactsScreen extends StatefulWidget {
@@ -81,15 +68,15 @@ class _ContactsScreenState extends State<ContactsScreen> {
       builder: (sheetContext) => AddDocSheet(
         type: 'Identity',
         initialFile: file,
-        onAdd: (title, filePath) async {
-          // Placeholder for real upload logic
+        onAdd: (title, fileKey, fileUrl) async {
           setState(() {
             _contacts.add({
               'name': title,
               'relation': 'Identity Doc',
               'phone': 'N/A',
               'status': 'Pending',
-              'filePath': filePath,
+              'file_key': fileKey,
+              'file_url': fileUrl,
             });
           });
           SuccessAnimationOverlay.show(context);
@@ -161,11 +148,12 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                         child: Padding(
                                           padding: const EdgeInsets.only(bottom: AppSpacing.medium),
                                           child: GlassCard(
-                                            onTap: c['filePath'] != null ? () {
+                                            onTap: (c['file_url'] != null || c['file_key'] != null) ? () {
                                               DocumentViewer.show(
                                                 context,
                                                 title: c['name'] ?? 'Contact',
-                                                filePath: c['filePath'],
+                                                fileKey: c['file_key'],
+                                                filePath: c['file_url'],
                                                 status: status,
                                               );
                                             } : null,
@@ -174,7 +162,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                               children: [
                                                 CircleAvatar(
                                                   radius: 24,
-                                                  backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
+                                                  backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
                                                   child: Icon(Icons.person_rounded, color: theme.colorScheme.primary),
                                                 ),
                                                 const SizedBox(width: AppSpacing.medium),
@@ -189,15 +177,15 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                         children: [
                                                           Icon(Icons.phone_outlined,
                                                               size: 12,
-                                                              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5)),
-                                                          const SizedBox(width: AppSpacing.tiny),
+                                                              color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5)),
+                                                          const SizedBox(width: AppSpacing.small),
                                                           Text(c['phone'] ?? 'N/A',
                                                               style: theme.textTheme.bodySmall),
                                                         ],
                                                       ),
                                                       Text(c['relation'] ?? 'Contact',
                                                           style: theme.textTheme.bodySmall?.copyWith(
-                                                              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4))),
+                                                              color: theme.colorScheme.onSurfaceVariant.withOpacity(0.4))),
                                                     ],
                                                   ),
                                                 ),
@@ -206,8 +194,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                       horizontal: AppSpacing.small, vertical: 4),
                                                   decoration: BoxDecoration(
                                                     color: status == 'Verified'
-                                                        ? Colors.green.withValues(alpha: 0.1)
-                                                        : Colors.orange.withValues(alpha: 0.1),
+                                                        ? Colors.green.withOpacity(0.1)
+                                                        : Colors.orange.withOpacity(0.1),
                                                     borderRadius: BorderRadius.circular(8),
                                                   ),
                                                   child: Text(
@@ -268,11 +256,11 @@ class _ContactsScreenState extends State<ContactsScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.contacts_outlined,
-              size: 80, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.2)),
+              size: 80, color: theme.colorScheme.onSurfaceVariant.withOpacity(0.2)),
           const SizedBox(height: AppSpacing.medium),
           Text('No contacts added',
               style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5))),
+                  color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5))),
           if (!widget.isGuest) ...[
             const SizedBox(height: AppSpacing.medium),
             TextButton(onPressed: _fetchContacts, child: const Text('Refresh')),
@@ -281,5 +269,4 @@ class _ContactsScreenState extends State<ContactsScreen> {
       ),
     );
   }
-}
 }

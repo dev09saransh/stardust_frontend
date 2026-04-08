@@ -46,7 +46,7 @@ class _GuidedTourState extends State<GuidedTour> {
           child: FadeIn(
             duration: const Duration(milliseconds: 300),
             child: Container(
-              color: Colors.black.withValues(alpha: 0.4),
+              color: Colors.black.withOpacity(0.4),
               child: BackdropFilter(
                 filter: ui.ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                 child: const SizedBox.expand(),
@@ -63,12 +63,12 @@ class _GuidedTourState extends State<GuidedTour> {
                 padding: const EdgeInsets.all(28),
                 decoration: BoxDecoration(
                   color: Theme.of(context).brightness == Brightness.dark 
-                    ? const Color(0xFF1E1E2C).withValues(alpha: 0.95)
-                    : Colors.white.withValues(alpha: 0.98),
+                    ? const Color(0xFF1E1E2C).withOpacity(0.95)
+                    : Colors.white.withOpacity(0.98),
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.2),
+                      color: Colors.black.withOpacity(0.2),
                       blurRadius: 30,
                       spreadRadius: 10,
                     ),
@@ -81,11 +81,11 @@ class _GuidedTourState extends State<GuidedTour> {
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: AppTheme.lavenderAccent.withValues(alpha: 0.1),
+                          color: AppTheme.lavenderAccent.withOpacity(0.1),
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: AppTheme.lavenderAccent.withValues(alpha: 0.3),
+                              color: AppTheme.lavenderAccent.withOpacity(0.3),
                               blurRadius: 20,
                               spreadRadius: 5,
                             ),
@@ -110,11 +110,11 @@ class _GuidedTourState extends State<GuidedTour> {
                       step.description,
                       style: TextStyle(
                         fontSize: 18,
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.9),
+                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.9),
                         height: 1.5,
                         shadows: Theme.of(context).brightness == Brightness.dark ? [
                           Shadow(
-                            color: Colors.black.withValues(alpha: 0.8),
+                            color: Colors.black.withOpacity(0.8),
                             blurRadius: 10,
                             offset: const Offset(0, 2),
                           ),
@@ -130,7 +130,7 @@ class _GuidedTourState extends State<GuidedTour> {
                           'Step ${_currentStep + 1} of ${widget.steps.length}',
                           style: TextStyle(
                             fontSize: 13,
-                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                           ),
                         ),
                         Row(
@@ -139,7 +139,7 @@ class _GuidedTourState extends State<GuidedTour> {
                               onPressed: widget.onFinish,
                               child: Text('Skip',
                                   style: TextStyle(
-                                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6))),
+                                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6))),
                             ),
                             const SizedBox(width: 12),
                             ElevatedButton(
@@ -157,7 +157,7 @@ class _GuidedTourState extends State<GuidedTour> {
                                 backgroundColor: AppTheme.lavenderAccent,
                                 foregroundColor: Colors.white,
                                 elevation: 12,
-                                shadowColor: AppTheme.lavenderAccent.withValues(alpha: 0.8),
+                                shadowColor: AppTheme.lavenderAccent.withOpacity(0.8),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                               ),

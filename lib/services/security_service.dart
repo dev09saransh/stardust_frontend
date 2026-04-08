@@ -1,12 +1,14 @@
-import '../api_client.dart';
+import './api_client.dart';
+import 'dart:convert';
 
 class SecurityService {
   final ApiClient _apiClient = ApiClient();
 
   Future<List<Map<String, dynamic>>> getLogs() async {
     final response = await _apiClient.get('/security-logs');
-    if (response is List) {
-      return response.map((e) => e as Map<String, dynamic>).toList();
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.map((e) => e as Map<String, dynamic>).toList();
     }
     return [];
   }

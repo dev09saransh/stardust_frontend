@@ -6,15 +6,6 @@ import '../../widgets/add_password_sheet.dart';
 import '../../widgets/login_prompt.dart';
 import 'package:animate_do/animate_do.dart';
 import '../../theme.dart';
-
-import 'package:flutter/material.dart';
-import '../../widgets/stardust_background.dart';
-import '../../widgets/glass_card.dart';
-import '../../widgets/success_animation.dart';
-import '../../widgets/add_password_sheet.dart';
-import '../../widgets/login_prompt.dart';
-import 'package:animate_do/animate_do.dart';
-import '../../theme.dart';
 import '../../services/password_service.dart';
 
 class PasswordsScreen extends StatefulWidget {
@@ -125,7 +116,7 @@ class _PasswordsScreenState extends State<PasswordsScreen> {
                                               Container(
                                                 padding: const EdgeInsets.all(AppSpacing.medium - 4),
                                                 decoration: BoxDecoration(
-                                                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                                                  color: theme.colorScheme.primary.withOpacity(0.1),
                                                   shape: BoxShape.circle,
                                                 ),
                                                 child: Icon(
@@ -148,7 +139,7 @@ class _PasswordsScreenState extends State<PasswordsScreen> {
                                                 ),
                                               ),
                                               Icon(Icons.visibility_off_outlined,
-                                                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                                                  color: theme.colorScheme.onSurfaceVariant.withOpacity(0.6),
                                                   size: 20),
                                             ],
                                           ),
@@ -198,11 +189,11 @@ class _PasswordsScreenState extends State<PasswordsScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.lock_outline_rounded,
-              size: 80, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.2)),
+              size: 80, color: theme.colorScheme.onSurfaceVariant.withOpacity(0.2)),
           const SizedBox(height: AppSpacing.medium),
           Text('No passwords saved',
               style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5))),
+                  color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5))),
           if (!widget.isGuest) ...[
             const SizedBox(height: AppSpacing.medium),
             TextButton(onPressed: _fetchPasswords, child: const Text('Refresh')),
@@ -211,5 +202,4 @@ class _PasswordsScreenState extends State<PasswordsScreen> {
       ),
     );
   }
-}
 }

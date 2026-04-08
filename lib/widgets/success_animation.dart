@@ -75,7 +75,7 @@ class _SuccessAnimationOverlayState extends State<SuccessAnimationOverlay>
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.black.withValues(alpha: 0.8),
+      color: Colors.black.withOpacity(0.8),
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -86,10 +86,10 @@ class _SuccessAnimationOverlayState extends State<SuccessAnimationOverlay>
                 padding: const EdgeInsets.all(32),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppTheme.lavenderAccent.withValues(alpha: 0.1),
+                  color: AppTheme.lavenderAccent.withOpacity(0.1),
                   boxShadow: [
                     BoxShadow(
-                      color: AppTheme.lavenderAccent.withValues(alpha: 0.3),
+                      color: AppTheme.lavenderAccent.withOpacity(0.3),
                       blurRadius: 30,
                       spreadRadius: 5,
                     ),

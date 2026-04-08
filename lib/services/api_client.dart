@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ApiClient {
+  // Hosted at local LAN IP for verified access (192.168.1.36)
+  // Public IP for external access: http://103.211.133.34:5002/api
   final String baseUrl = 'http://localhost:5002/api';
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
@@ -84,5 +86,9 @@ class ApiClient {
   Future<bool> isAuthenticated() async {
     final token = await _storage.read(key: 'jwt_token');
     return token != null;
+  }
+
+  Future<String?> getToken() async {
+    return await _storage.read(key: 'jwt_token');
   }
 }

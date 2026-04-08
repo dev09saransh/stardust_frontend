@@ -89,7 +89,7 @@ class SettingsScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.medium, vertical: AppSpacing.medium - 2),
         child: Row(
           children: [
-            Icon(icon, color: theme.colorScheme.onSurface.withValues(alpha: 0.6), size: 22),
+            Icon(icon, color: theme.colorScheme.onSurface.withOpacity(0.6), size: 22),
             const SizedBox(width: AppSpacing.medium),
             Expanded(
               child: Text(title,
@@ -103,7 +103,7 @@ class SettingsScreen extends StatelessWidget {
             if (!toggle) const SizedBox(width: AppSpacing.small),
             if (!toggle)
               Icon(Icons.arrow_forward_ios_rounded,
-                  size: 14, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3)),
+                  size: 14, color: theme.colorScheme.onSurfaceVariant.withOpacity(0.3)),
           ],
         ),
       ),

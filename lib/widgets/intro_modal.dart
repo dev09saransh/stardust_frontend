@@ -54,7 +54,7 @@ class _IntroModalState extends State<IntroModal> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.close_rounded, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
+                    icon: Icon(Icons.close_rounded, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
                     onPressed: widget.onFinish,
                   ),
                 ],
@@ -87,7 +87,7 @@ class _IntroModalState extends State<IntroModal> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 14,
-                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                           ),
                         ),
                       ],
@@ -108,7 +108,7 @@ class _IntroModalState extends State<IntroModal> {
                     decoration: BoxDecoration(
                       color: _currentPage == index
                           ? AppTheme.lavenderAccent
-                          : AppTheme.lavenderAccent.withValues(alpha: 0.2),
+                          : AppTheme.lavenderAccent.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),

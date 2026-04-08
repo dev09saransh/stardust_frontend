@@ -99,7 +99,7 @@ class _SecurityLogScreenState extends State<SecurityLogScreen> {
                                         decoration: BoxDecoration(
                                           border: Border(
                                             bottom: BorderSide(
-                                              color: theme.dividerColor.withValues(alpha: 0.1),
+                                              color: theme.dividerColor.withOpacity(0.1),
                                             ),
                                           ),
                                         ),
@@ -123,7 +123,7 @@ class _SecurityLogScreenState extends State<SecurityLogScreen> {
                                           itemCount: _logs.length,
                                           separatorBuilder: (context, index) => Divider(
                                             height: 1,
-                                            color: Theme.of(context).dividerColor.withValues(alpha: 0.05),
+                                            color: Theme.of(context).dividerColor.withOpacity(0.05),
                                           ),
                                           itemBuilder: (context, index) {
                                             final log = _logs[index];

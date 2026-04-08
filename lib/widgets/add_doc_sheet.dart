@@ -22,6 +22,23 @@ class AddDocSheet extends StatefulWidget {
     this.initialFile,
   });
 
+  static void show(BuildContext context, {
+    required String docType, 
+    XFile? initialFile, 
+    required Function(String title, String? fileKey, String? fileUrl) onAdd
+  }) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => AddDocSheet(
+        type: docType,
+        onAdd: onAdd,
+        initialFile: initialFile,
+      ),
+    );
+  }
+
   @override
   State<AddDocSheet> createState() => _AddDocSheetState();
 }
@@ -32,10 +49,21 @@ class _AddDocSheetState extends State<AddDocSheet> {
   final UploadService _uploadService = UploadService();
   XFile? _pickedFile;
   bool _isUploading = false;
+  late String _selectedVault;
+
+  final List<String> _vaults = [
+    'Assets',
+    'Insurance',
+    'Passwords',
+    'Legal Docs',
+    'Identity',
+    'Others'
+  ];
 
   @override
   void initState() {
     super.initState();
+    _selectedVault = widget.type;
     if (widget.initialFile != null) {
       _pickedFile = widget.initialFile;
       _populateTitleFromFilename();
@@ -59,7 +87,7 @@ class _AddDocSheetState extends State<AddDocSheet> {
     try {
       final result = await _uploadService.uploadFile(
         _pickedFile!, 
-        folder: widget.type.toLowerCase(),
+        folder: _selectedVault.toLowerCase().replaceAll(' ', '_'),
       );
       
       widget.onAdd(_titleController.text, result.key, result.location);
@@ -75,6 +103,7 @@ class _AddDocSheetState extends State<AddDocSheet> {
   }
 
   /// Launch the native document scanner (camera → edge detection → auto-crop)
+  Future<void> _scanDocument() async {
     if (!kIsWeb) {
       try {
         final scannerInstance = scanner.getScanner();
@@ -155,7 +184,7 @@ class _AddDocSheetState extends State<AddDocSheet> {
                 Container(
                   padding: const EdgeInsets.all(AppSpacing.medium - 4),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                    color: theme.colorScheme.primary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(Icons.description_rounded, color: theme.colorScheme.primary),
@@ -165,14 +194,29 @@ class _AddDocSheetState extends State<AddDocSheet> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Upload ${widget.type} Document',
+                      Text('Secure Document Scan',
                           style: theme.textTheme.headlineSmall),
-                      Text('Securely vault your files to S3',
-                          style: theme.textTheme.bodySmall),
+                      Text('Target Vault: $_selectedVault',
+                          style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.primary, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: AppSpacing.large),
+            Text('VAULT SECTION', style: theme.textTheme.labelSmall?.copyWith(letterSpacing: 1, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurfaceVariant.withOpacity(0.6))),
+            const SizedBox(height: AppSpacing.small),
+            DropdownButtonFormField<String>(
+              value: _selectedVault,
+              dropdownColor: theme.colorScheme.surface,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white.withOpacity(0.05),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+              ),
+              items: _vaults.map((v) => DropdownMenuItem(value: v, child: Text(v))).toList(),
+              onChanged: (val) => setState(() => _selectedVault = val!),
             ),
             const SizedBox(height: AppSpacing.large),
             if (_isUploading)
@@ -241,8 +285,8 @@ class _AddDocSheetState extends State<AddDocSheet> {
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.3)),
-          color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+          border: Border.all(color: theme.colorScheme.primary.withOpacity(0.3)),
+          color: theme.colorScheme.onSurface.withOpacity(0.05),
         ),
         clipBehavior: Clip.antiAlias,
         child: Stack(
@@ -262,7 +306,7 @@ class _AddDocSheetState extends State<AddDocSheet> {
                     _titleController.clear();
                   }),
                   icon: const Icon(Icons.cancel_rounded, color: Colors.white, size: 28),
-                  style: IconButton.styleFrom(backgroundColor: Colors.black.withValues(alpha: 0.5)),
+                  style: IconButton.styleFrom(backgroundColor: Colors.black.withOpacity(0.5)),
                 ),
               ),
             Positioned(
@@ -271,7 +315,7 @@ class _AddDocSheetState extends State<AddDocSheet> {
               right: 0,
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: AppSpacing.medium),
-                color: Colors.black.withValues(alpha: 0.6),
+                color: Colors.black.withOpacity(0.6),
                 child: Row(
                   children: [
                     const Icon(Icons.check_circle_rounded, color: Colors.greenAccent, size: 16),
@@ -323,9 +367,9 @@ class _AddDocSheetState extends State<AddDocSheet> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.large),
         decoration: BoxDecoration(
-          color: theme.colorScheme.onSurface.withValues(alpha: 0.03),
+          color: theme.colorScheme.onSurface.withOpacity(0.03),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: theme.colorScheme.onSurface.withValues(alpha: 0.1)),
+          border: Border.all(color: theme.colorScheme.onSurface.withOpacity(0.1)),
         ),
         child: Column(
           children: [

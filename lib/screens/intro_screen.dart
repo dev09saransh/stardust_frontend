@@ -75,8 +75,8 @@ class _IntroScreenState extends State<IntroScreen>
                             shape: BoxShape.circle,
                             gradient: LinearGradient(
                               colors: [
-                                AppTheme.lavenderAccent.withValues(alpha: 0.25),
-                                AppTheme.lavenderAccent.withValues(alpha: 0.10),
+                                AppTheme.lavenderAccent.withOpacity(0.25),
+                                AppTheme.lavenderAccent.withOpacity(0.10),
                               ],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
@@ -84,7 +84,7 @@ class _IntroScreenState extends State<IntroScreen>
                             boxShadow: [
                               BoxShadow(
                                 color: AppTheme.lavenderAccent
-                                    .withValues(alpha: 0.15),
+                                    .withOpacity(0.15),
                                 blurRadius: 30,
                                 spreadRadius: 8,
                               ),
@@ -108,7 +108,7 @@ class _IntroScreenState extends State<IntroScreen>
                         const SizedBox(height: 10),
                         Text('Your assets, your rules, forever protected',
                             style: TextStyle(
-                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                                 fontSize: 14,
                                 letterSpacing: 0.5)),
                       ]),
@@ -127,7 +127,7 @@ class _IntroScreenState extends State<IntroScreen>
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
                                   color: AppTheme.lavenderAccent
-                                      .withValues(alpha: 0.12),
+                                      .withOpacity(0.12),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Icon(f['icon'] as IconData,
@@ -147,7 +147,7 @@ class _IntroScreenState extends State<IntroScreen>
                                     Text(f['desc'] as String,
                                         style: TextStyle(
                                             fontSize: 12,
-                                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5))),
+                                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5))),
                                   ],
                                 ),
                               ),

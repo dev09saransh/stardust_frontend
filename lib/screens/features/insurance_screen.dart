@@ -10,19 +10,6 @@ import '../../widgets/add_doc_sheet.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../widgets/document_viewer.dart';
 import '../../theme.dart';
-
-import 'package:flutter/material.dart';
-import '../../widgets/stardust_background.dart';
-import '../../widgets/glass_card.dart';
-import '../../widgets/gradient_button.dart';
-import '../../widgets/success_animation.dart';
-import '../../widgets/login_prompt.dart';
-import 'package:animate_do/animate_do.dart';
-import '../../widgets/drop_zone_wrapper.dart';
-import '../../widgets/add_doc_sheet.dart';
-import 'package:image_picker/image_picker.dart';
-import '../../widgets/document_viewer.dart';
-import '../../theme.dart';
 import '../../services/insurance_service.dart';
 
 class InsuranceScreen extends StatefulWidget {
@@ -104,36 +91,32 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
       LoginRequiredPrompt.show(context);
       return;
     }
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (sheetContext) => AddDocSheet(
-        type: 'Insurance',
-        initialFile: file,
-        onAdd: (title, fileKey, fileUrl) async {
-          try {
-            await _insuranceService.addInsurance({
-              'policy_name': title,
-              'provider': title,
-              'type': 'General',
-              'policy_number': 'SCAN-${DateTime.now().millisecond}',
-              'metadata': {
-                'file_key': fileKey,
-                'file_url': fileUrl,
-              },
-            });
-            _fetchPolicies();
-            if (mounted) SuccessAnimationOverlay.show(context);
-          } catch (e) {
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Failed to save policy document: $e'), backgroundColor: Colors.redAccent),
-              );
-            }
+    AddDocSheet.show(
+      context,
+      docType: 'Insurance',
+      initialFile: file,
+      onAdd: (title, fileKey, fileUrl) async {
+        try {
+          await _insuranceService.addInsurance({
+            'policy_name': title,
+            'provider': title,
+            'type': 'General',
+            'policy_number': 'SCAN-${DateTime.now().millisecond}',
+            'metadata': {
+              'file_key': fileKey,
+              'file_url': fileUrl,
+            },
+          });
+          _fetchPolicies();
+          if (mounted) SuccessAnimationOverlay.show(context);
+        } catch (e) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Failed to save policy document: $e'), backgroundColor: Colors.redAccent),
+            );
           }
-        },
-      ),
+        }
+      },
     );
   }
 
@@ -184,7 +167,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                                                 Container(
                                                   padding: const EdgeInsets.all(AppSpacing.medium - 4),
                                                   decoration: BoxDecoration(
-                                                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                                                    color: theme.colorScheme.primary.withOpacity(0.1),
                                                     shape: BoxShape.circle,
                                                   ),
                                                   child: Icon(
@@ -247,6 +230,20 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
           const SizedBox(width: AppSpacing.small),
           Text('Insurance',
               style: isMobile ? theme.textTheme.headlineMedium : theme.textTheme.headlineLarge),
+          const Spacer(),
+          // Original "Perfect" Scan Button
+          IconButton(
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(Icons.document_scanner_rounded, color: theme.colorScheme.primary, size: 24),
+            ),
+            tooltip: 'Scan Document',
+            onPressed: () => _onFileDropped(XFile('')), // This triggers AddDocSheet
+          ),
         ],
       ),
     );
@@ -259,11 +256,11 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.health_and_safety_outlined,
-              size: 80, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.2)),
+              size: 80, color: theme.colorScheme.onSurfaceVariant.withOpacity(0.2)),
           const SizedBox(height: AppSpacing.medium),
           Text('No policies added yet',
               style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5))),
+                  color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5))),
           if (!widget.isGuest) ...[
             const SizedBox(height: AppSpacing.medium),
             TextButton(onPressed: _fetchPolicies, child: const Text('Refresh')),
@@ -354,12 +351,12 @@ class _AddPolicySheetState extends State<_AddPolicySheet> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: selected
-              ? theme.colorScheme.primary.withValues(alpha: 0.2)
-              : Colors.white.withValues(alpha: 0.05),
+              ? theme.colorScheme.primary.withOpacity(0.2)
+              : Colors.white.withOpacity(0.05),
           border: Border.all(
             color: selected
                 ? theme.colorScheme.primary
-                : Colors.white.withValues(alpha: 0.1),
+                : Colors.white.withOpacity(0.1),
           ),
         ),
         child: Text(label,

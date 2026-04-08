@@ -8,6 +8,15 @@ class AddAssetSheet extends StatefulWidget {
   final String category;
   const AddAssetSheet({super.key, required this.onAdd, this.category = 'Digital'});
 
+  static void show(BuildContext context, {required String category, required Function(String, String, String) onAdd}) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => AddAssetSheet(category: category, onAdd: onAdd),
+    );
+  }
+
   @override
   State<AddAssetSheet> createState() => _AddAssetSheetState();
 }
@@ -120,12 +129,12 @@ class _AddAssetSheetState extends State<AddAssetSheet> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: selected
-              ? theme.colorScheme.primary.withValues(alpha: 0.2)
-              : Colors.white.withValues(alpha: 0.05),
+              ? theme.colorScheme.primary.withOpacity(0.2)
+              : Colors.white.withOpacity(0.05),
           border: Border.all(
             color: selected
                 ? theme.colorScheme.primary
-                : Colors.white.withValues(alpha: 0.1),
+                : Colors.white.withOpacity(0.1),
           ),
         ),
         child: Text(label,
